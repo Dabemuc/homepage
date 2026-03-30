@@ -42,7 +42,7 @@ export default function AdminLayout() {
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
       <aside className="w-56 border-r flex flex-col">
-        <div className="p-4 font-semibold text-lg border-b">Admin</div>
+        <div className="h-14 px-4 font-semibold text-lg border-b flex items-center">Admin</div>
         <nav className="flex-1 p-2 space-y-1">
           {navItems.map(({ to, label, icon: Icon, exact }) => {
             const isActive = exact
@@ -76,7 +76,7 @@ export default function AdminLayout() {
       {/* Main content */}
       <main className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="border-b p-4 flex justify-end">
+        <header className="h-14 border-b px-4 flex items-center justify-end">
           <Button
             variant="ghost"
             size="icon"

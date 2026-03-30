@@ -8,6 +8,8 @@ type Props = {
 export default function CareerTimeline({ sections }: Props) {
   if (sections.length === 0) return null;
 
+  const reversedSections = sections.slice().reverse();
+
   return (
     <div className="relative">
       {/* Center gradient line */}
@@ -20,7 +22,7 @@ export default function CareerTimeline({ sections }: Props) {
         }}
       />
 
-      {sections.map((section) => (
+      {reversedSections.map((section) => (
         <div
           key={section.id}
           className="group/section relative mb-20 transition-opacity duration-300"
@@ -34,7 +36,7 @@ export default function CareerTimeline({ sections }: Props) {
 
           {/* Entries */}
           <div className="space-y-8">
-            {section.entries.map((entry, entryIndex) => {
+            {section.entries.slice().reverse().map((entry, entryIndex) => {
               const isLeft = entryIndex % 2 === 0;
 
               return (

@@ -56,7 +56,7 @@ export default function SocialsPanel({ socials }: Props) {
       </button>
 
       {/* Panel content */}
-      <div className="bg-card/80 backdrop-blur-md border border-border/60 rounded-l-none rounded-xl shadow-xl p-3 space-y-1 min-w-[128px]">
+      <div className="bg-card/80 backdrop-blur-md border border-l-0 border-border/60 rounded-r-none rounded-xl shadow-xl p-3 space-y-1 min-w-[128px]">
         {socials.map((social) => (
           <a
             key={social.id}

@@ -6,7 +6,7 @@ type Props = {
 
 export default function IntroSection({ intro }: Props) {
   return (
-    <section className="py-24 px-6 max-w-4xl mx-auto">
+    <section className="py-24 px-6 max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row items-center md:items-start gap-10">
         {intro.avatar_url && (
           <div className="relative flex-shrink-0">
