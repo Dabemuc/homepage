@@ -4,6 +4,8 @@ import { eq } from "drizzle-orm";
 import type { Env } from "../../env";
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
+  console.log("[homepage] function invoked");
+  try {
   const db = drizzle(context.env.DB, { schema });
 
   const [config, introRows, projectRows, sectionRows, entryRows, socialRows] = await Promise.all([
@@ -32,4 +34,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       socials: socialRows,
     },
   });
+  } catch (err) {
+    console.error("[homepage] error:", err);
+    return Response.json({ success: false, error: String(err) }, { status: 500 });
+  }
 };

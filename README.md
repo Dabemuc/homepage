@@ -31,7 +31,7 @@ npm install
 
 ### 2. Set up environment variables
 
-Create a `.dev.vars` file for wrangler local dev:
+Create a `.dev.vars` file (read by the Cloudflare Vite plugin):
 
 ```
 CLERK_SECRET_KEY=sk_test_...
@@ -39,31 +39,20 @@ ADMIN_CLERK_USER_ID=user_...
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 ```
 
-Create a `.env.local` file for Vite:
-
-```
-VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
-```
-
-### 3. Create local D1 database and apply migrations
+### 3. Apply migrations and seed
 
 ```bash
-# Apply migrations to local D1
-wrangler d1 migrations apply homepage --local
-
-# Seed with sample data
-wrangler d1 execute homepage --local --file=./db/seed.sql
+npx wrangler d1 migrations apply homepage --local
+npx wrangler d1 execute homepage --local --file=./db/seed.sql
 ```
 
 ### 4. Run dev server
 
 ```bash
-# Frontend only (no API)
 npm run dev
-
-# With Cloudflare Pages Functions (API + frontend)
-npx wrangler pages dev --d1 DB=homepage -- npm run dev
 ```
+
+The `@cloudflare/vite-plugin` integrates D1 bindings and Pages Functions directly into Vite's dev server — no separate wrangler process needed.
 
 ## Database Migrations
 
