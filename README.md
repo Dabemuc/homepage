@@ -1,12 +1,12 @@
 # Homepage
 
-A personal portfolio homepage with a fully configurable admin UI, hosted on Cloudflare Pages with D1 (SQLite) database.
+A personal portfolio homepage with a fully configurable admin UI, hosted on Cloudflare Workers with D1 (SQLite) database.
 
 ## Tech Stack
 
 - **Frontend**: Vite + React 19, TypeScript, Tailwind CSS v4, shadcn/ui
-- **Hosting**: Cloudflare Pages
-- **API**: Cloudflare Pages Functions
+- **Hosting**: Cloudflare Workers
+- **API**: Cloudflare Worker (`worker/index.ts`)
 - **Database**: Cloudflare D1 (SQLite) via Drizzle ORM
 - **Auth**: Clerk (admin-only)
 - **Routing**: React Router v6
@@ -52,7 +52,7 @@ npx wrangler d1 execute homepage --local --file=./db/seed.sql
 npm run dev
 ```
 
-The `@cloudflare/vite-plugin` integrates D1 bindings and Pages Functions directly into Vite's dev server — no separate wrangler process needed.
+The `@cloudflare/vite-plugin` integrates D1 bindings and the Worker directly into Vite's dev server — no separate wrangler process needed.
 
 ## Database Migrations
 
@@ -83,25 +83,31 @@ npm run build
 
 Output is in `dist/`.
 
-## Deployment (Cloudflare Pages)
+## Deployment (Cloudflare Workers)
 
 1. Create a D1 database: `wrangler d1 create homepage`
-2. Update `database_id` in `wrangler.toml`
+2. Update `database_id` in `wrangler.jsonc`
 3. Apply migrations to remote: `wrangler d1 migrations apply homepage --remote`
-4. Connect GitHub repo to Cloudflare Pages (build command: `npm run build`, output dir: `dist`)
-5. Set environment variables in Cloudflare Pages dashboard:
-   - `VITE_CLERK_PUBLISHABLE_KEY`
-   - `CLERK_SECRET_KEY` (secret)
-   - `ADMIN_CLERK_USER_ID` (secret)
-6. Add D1 binding (`DB`) in Pages dashboard
+4. Deploy: `npm run deploy`
+5. Set secrets in Cloudflare dashboard or via wrangler:
+   - `wrangler secret put CLERK_SECRET_KEY`
+   - `wrangler secret put ADMIN_CLERK_USER_ID`
+   - `wrangler secret put VITE_CLERK_PUBLISHABLE_KEY`
+
+## Regenerate Worker Types
+
+After changing `wrangler.jsonc` bindings:
+
+```bash
+npm run cf-typegen
+```
 
 ## Project Structure
 
 ```
 /
 ├── public/
-│   ├── screenshots/          # Project screenshots
-│   └── _redirects            # SPA fallback
+│   └── screenshots/          # Project screenshots
 ├── src/
 │   ├── components/
 │   │   ├── sections/         # HomePage section components
@@ -114,15 +120,12 @@ Output is in `dist/`.
 │   │   └── api.ts            # Typed API fetch wrappers
 │   ├── App.tsx
 │   └── main.tsx
-├── functions/
-│   └── api/
-│       ├── _middleware.ts    # Clerk JWT verification
-│       ├── public/           # Public read-only endpoints
-│       └── admin/            # Protected CRUD endpoints
+├── worker/
+│   └── index.ts              # Cloudflare Worker (API routes + auth)
 ├── db/
 │   ├── schema.ts             # Drizzle schema
 │   ├── migrations/           # Generated SQL migrations
 │   └── seed.sql              # Sample data
-├── wrangler.toml
+├── wrangler.jsonc
 └── drizzle.config.ts
 ```

@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "homepage",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-03-30",
+  "assets": {
+    "not_found_handling": "single-page-application"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true,
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "homepage",
+      "database_id": "089be3b6-3a0f-433f-8b6a-88fff875dbb8",
+      "migrations_dir": "db/migrations"
+    }
+  ]
+}
