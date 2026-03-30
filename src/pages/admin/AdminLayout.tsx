@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth, UserButton } from "@clerk/clerk-react";
-import { Home, User, FolderOpen, Briefcase, Share2, Menu, X, ExternalLink } from "lucide-react";
+import { Home, User, FolderOpen, Briefcase, Share2, Menu, X, Globe } from "lucide-react";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: Home, exact: true },
@@ -79,7 +79,7 @@ export default function AdminLayout() {
 
         {/* Top bar */}
         <header className="h-14 border-b px-4 flex items-center justify-between flex-shrink-0">
-          {/* Left: burger on mobile, "Admin" label on desktop (sidebar already shows it) */}
+          {/* Left: burger on mobile */}
           <button
             className="md:hidden inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
             onClick={() => setMobileNavOpen((v) => !v)}
@@ -87,6 +87,11 @@ export default function AdminLayout() {
           >
             {mobileNavOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
+
+          {/* Center: "Admin" label on mobile */}
+          <span className="md:hidden absolute left-1/2 -translate-x-1/2 font-semibold text-sm text-foreground pointer-events-none">
+            Admin
+          </span>
           <span className="hidden md:block" />
 
           {/* Right: back to site + user */}
@@ -97,7 +102,7 @@ export default function AdminLayout() {
               title="View site"
               className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
             >
-              <ExternalLink className="w-4 h-4" />
+              <Globe className="w-4 h-4" />
             </Link>
             <UserButton afterSignOutUrl="/" />
           </div>
