@@ -12,27 +12,30 @@ export default function ProjectCard({ project, onClick }: Props) {
 
   return (
     <div
-      className="group rounded-xl border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden"
+      className="group relative rounded-xl border border-border/70 bg-card text-card-foreground shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300 cursor-pointer overflow-hidden"
       onClick={onClick}
     >
+      {/* Subtle gradient overlay on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-subtle/0 to-brand-subtle/0 group-hover:from-brand-subtle/50 group-hover:to-transparent transition-all duration-300 pointer-events-none z-10 rounded-xl" />
+
       {/* Screenshot */}
       <div className="aspect-video bg-muted overflow-hidden">
         {project.screenshot ? (
           <img
             src={`/screenshots/${project.screenshot}`}
             alt={project.title ?? "Project screenshot"}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
+          <div className="w-full h-full flex items-center justify-center text-muted-foreground/40 text-sm">
             No screenshot
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-3">
-        <h3 className="font-semibold text-lg leading-tight group-hover:text-primary transition-colors">
+      <div className="p-5 space-y-3">
+        <h3 className="font-semibold text-base leading-snug group-hover:text-primary transition-colors duration-200">
           {project.title}
         </h3>
         {project.short_description && (
@@ -45,7 +48,11 @@ export default function ProjectCard({ project, onClick }: Props) {
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs">
+              <Badge
+                key={tag}
+                variant="secondary"
+                className="text-xs bg-accent/60 text-accent-foreground border-0 font-normal"
+              >
                 {tag}
               </Badge>
             ))}
@@ -53,14 +60,14 @@ export default function ProjectCard({ project, onClick }: Props) {
         )}
 
         {/* Links */}
-        <div className="flex gap-3 pt-1">
+        <div className="flex gap-3 pt-0.5">
           {project.repo_url && (
             <a
               href={project.repo_url}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground/60 hover:text-primary transition-colors duration-200"
               title="Repository"
             >
               <Github className="w-4 h-4" />
@@ -72,7 +79,7 @@ export default function ProjectCard({ project, onClick }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground/60 hover:text-primary transition-colors duration-200"
               title="Website"
             >
               <ExternalLink className="w-4 h-4" />

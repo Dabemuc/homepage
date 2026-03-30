@@ -13,9 +13,12 @@ export default function ProjectsSection({ projects }: Props) {
   if (projects.length === 0) return null;
 
   return (
-    <section className="py-16 px-4 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold mb-8">Projects</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <section className="py-20 px-6 max-w-6xl mx-auto">
+      <div className="mb-10">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">Projects</h2>
+        <div className="mt-2 h-px w-12 bg-gradient-to-r from-primary to-transparent rounded-full" />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {projects.map((project) => (
           <ProjectCard
             key={project.id}
