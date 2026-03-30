@@ -1,9 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ExternalLink, Github } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Project } from "@/lib/api";
+import { tagColor } from "@/lib/tagColor";
 
 type Props = {
   project: Project | null;
@@ -17,60 +17,63 @@ export default function ProjectModal({ project, onClose }: Props) {
 
   return (
     <Dialog open={!!project} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">{project.title}</DialogTitle>
-        </DialogHeader>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            {project.screenshot && (
-              <div className="aspect-video rounded-lg overflow-hidden bg-muted">
-                <img
-                  src={`/screenshots/${project.screenshot}`}
-                  alt={project.title ?? "Project screenshot"}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+      <DialogContent className="flex flex-col w-[90vw] max-w-2xl h-[75vh] p-0 gap-0 overflow-hidden">
+        {/* Header: title + links */}
+        <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4 border-b border-border/50 flex-shrink-0">
+          <h2 className="text-xl font-semibold leading-snug text-foreground">
+            {project.title}
+          </h2>
+          <div className="flex gap-2 flex-shrink-0 mt-0.5">
+            {project.repo_url && (
+              <a
+                href={project.repo_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Repository"
+                className="text-muted-foreground/60 hover:text-primary transition-colors duration-200"
+              >
+                <Github className="w-4 h-4" />
+              </a>
             )}
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <Badge key={tag} variant="secondary">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-            <div className="flex gap-3">
-              {project.repo_url && (
-                <a
-                  href={project.repo_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <Github className="w-4 h-4" />
-                  Repository
-                </a>
-              )}
-              {project.website_url && (
-                <a
-                  href={project.website_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Website
-                </a>
-              )}
-            </div>
+            {project.website_url && (
+              <a
+                href={project.website_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Website"
+                className="text-muted-foreground/60 hover:text-primary transition-colors duration-200"
+              >
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            )}
           </div>
-          <div className="prose prose-sm dark:prose-invert max-w-none">
-            {project.description && (
+        </div>
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 px-6 py-3 border-b border-border/50 flex-shrink-0">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${tagColor(tag)}`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Description — scrollable */}
+        <div className="flex-1 overflow-y-auto px-6 py-5">
+          {project.description ? (
+            <div className="prose prose-sm dark:prose-invert max-w-none">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {project.description.replace(/\\n/g, "\n")}
               </ReactMarkdown>
-            )}
-          </div>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground italic">No description.</p>
+          )}
         </div>
       </DialogContent>
     </Dialog>
