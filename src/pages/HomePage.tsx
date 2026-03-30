@@ -1,14 +1,33 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Settings } from "lucide-react";
+import * as Icons from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import IntroSection from "@/components/sections/IntroSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import CareerSection from "@/components/sections/CareerSection";
-import SocialsPanel from "@/components/SocialsPanel";
 import { fetchHomepage } from "@/lib/api";
-import type { HomepageData } from "@/lib/api";
+import type { HomepageData, SocialLink } from "@/lib/api";
+
+function SocialIcon({ social }: { social: SocialLink }) {
+  const IconComponent = social.icon
+    ? (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[social.icon]
+    : null;
+  if (!IconComponent) return null;
+  return (
+    <a
+      href={social.url ?? "#"}
+      target={social.url?.startsWith("mailto:") ? undefined : "_blank"}
+      rel="noopener noreferrer"
+      aria-label={social.label ?? social.platform ?? ""}
+      title={social.label ?? social.platform ?? ""}
+      className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+    >
+      <IconComponent className="h-4 w-4" />
+    </a>
+  );
+}
 
 export default function HomePage() {
   const [data, setData] = useState<HomepageData | null>(null);
@@ -23,6 +42,8 @@ export default function HomePage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const visibleSocials = data?.socials.filter((s) => s.visible !== false) ?? [];
+
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden">
       {/* Subtle background glow */}
@@ -36,24 +57,34 @@ export default function HomePage() {
       />
 
       {/* Top bar */}
-      <header className="fixed top-0 right-0 z-40 p-3 flex gap-1.5">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          aria-label="Toggle theme"
-          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
-        >
-          <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-        </Button>
-        <Link
-          to="/admin"
-          aria-label="Admin"
-          className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
-        >
-          <Settings className="h-4 w-4" />
-        </Link>
+      <header className="fixed top-0 inset-x-0 z-40 p-3 flex items-center justify-between">
+        {/* Socials — left side */}
+        <div className="flex gap-1">
+          {visibleSocials.map((social) => (
+            <SocialIcon key={social.id} social={social} />
+          ))}
+        </div>
+
+        {/* Controls — right side */}
+        <div className="flex gap-1.5">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label="Toggle theme"
+            className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+          >
+            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          </Button>
+          <Link
+            to="/admin"
+            aria-label="Admin"
+            className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+          >
+            <Settings className="h-4 w-4" />
+          </Link>
+        </div>
       </header>
 
       {loading && (
@@ -91,8 +122,6 @@ export default function HomePage() {
               <CareerSection sections={data.career} />
             </div>
           )}
-
-          <SocialsPanel socials={data.socials} />
         </div>
       )}
 
