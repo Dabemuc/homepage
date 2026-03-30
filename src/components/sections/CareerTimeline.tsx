@@ -25,7 +25,7 @@ export default function CareerTimeline({ sections }: Props) {
       {reversedSections.map((section) => (
         <div
           key={section.id}
-          className="group/section relative mb-20 transition-opacity duration-300"
+          className="group/section relative mb-20"
         >
           {/* Entries */}
           <div className="space-y-8">
@@ -43,7 +43,7 @@ export default function CareerTimeline({ sections }: Props) {
                     {/* Content */}
                     <div className="flex-1">
                       <div
-                        className={`rounded-xl border border-border/70 bg-card p-5 shadow-sm hover:shadow-md hover:border-primary/25 transition-all duration-200 ${
+                        className={`rounded-xl border border-border/70 bg-card p-5 shadow-sm group-hover/section:shadow-[0_0_18px_2px_var(--brand-glow)] group-hover/section:border-primary/20 transition-all duration-300 ${
                           isLeft ? "ml-auto" : "mr-auto"
                         } max-w-md`}
                       >
@@ -90,7 +90,7 @@ export default function CareerTimeline({ sections }: Props) {
                         />
                       )}
                     </div>
-                    <div className="rounded-xl border border-border/70 bg-card p-4 shadow-sm mb-4 flex-1">
+                    <div className="rounded-xl border border-border/70 bg-card p-4 shadow-sm mb-4 flex-1 group-hover/section:shadow-[0_0_18px_2px_var(--brand-glow)] group-hover/section:border-primary/20 transition-all duration-300">
                       <div className="text-xs font-medium text-primary/80 mb-1.5 tracking-wide">
                         {entry.timestamp}
                       </div>
@@ -114,13 +114,6 @@ export default function CareerTimeline({ sections }: Props) {
             </div>
           </div>
 
-          {/* Dim overlay for other sections on hover */}
-          <style>{`
-            .group\\/section:has(~ .group\\/section:hover),
-            .group\\/section:hover ~ .group\\/section {
-              opacity: 0.35;
-            }
-          `}</style>
         </div>
       ))}
     </div>
