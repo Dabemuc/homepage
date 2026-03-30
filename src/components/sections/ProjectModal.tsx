@@ -66,7 +66,9 @@ export default function ProjectModal({ project, onClose }: Props) {
           </div>
           <div className="prose prose-sm dark:prose-invert max-w-none">
             {project.description && (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{project.description}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {project.description.replace(/\\n/g, "\n")}
+              </ReactMarkdown>
             )}
           </div>
         </div>
