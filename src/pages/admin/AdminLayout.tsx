@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth, UserButton } from "@clerk/clerk-react";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Sun, Moon, Home, User, FolderOpen, Briefcase, Share2 } from "lucide-react";
+import { Home, User, FolderOpen, Briefcase, Share2 } from "lucide-react";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: Home, exact: true },
@@ -18,7 +16,6 @@ export default function AdminLayout() {
   const { isLoaded, isSignedIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -76,17 +73,7 @@ export default function AdminLayout() {
       {/* Main content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
-        <header className="h-14 border-b px-4 flex items-center justify-end flex-shrink-0">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            aria-label="Toggle theme"
-          >
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </Button>
-        </header>
+        <header className="h-14 border-b px-4 flex items-center justify-end flex-shrink-0" />
 
         <div className="flex-1 p-6 overflow-auto min-h-0">
           <Outlet />

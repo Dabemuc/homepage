@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
-import { Sun, Moon, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import * as Icons from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import IntroSection from "@/components/sections/IntroSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import CareerSection from "@/components/sections/CareerSection";
@@ -33,8 +31,6 @@ export default function HomePage() {
   const [data, setData] = useState<HomepageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { theme, setTheme } = useTheme();
-
   useEffect(() => {
     fetchHomepage()
       .then(setData)
@@ -67,16 +63,6 @@ export default function HomePage() {
 
         {/* Controls — right side */}
         <div className="flex gap-1.5">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            aria-label="Toggle theme"
-            className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
-          >
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </Button>
           <Link
             to="/admin"
             aria-label="Admin"

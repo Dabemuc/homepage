@@ -28,7 +28,7 @@ function WithClerk({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="class" forcedTheme="dark" enableSystem={false}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
