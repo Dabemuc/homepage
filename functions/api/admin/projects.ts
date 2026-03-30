@@ -17,7 +17,7 @@ type ProjectBody = {
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const db = drizzle(context.env.DB, { schema });
-  const rows = await db.select().from(schema.projects).orderBy(schema.projects.display_order).all();
+  const rows = await db.select().from(schema.projects).orderBy(schema.projects.display_order);
   return Response.json({ success: true, data: rows });
 };
 
@@ -41,7 +41,7 @@ export const onRequestPut: PagesFunction<Env> = async (context) => {
   const body = await context.request.json() as ProjectBody;
   await db.update(schema.projects).set(body).where(eq(schema.projects.id, parseInt(id)));
 
-  const updated = await db.select().from(schema.projects).where(eq(schema.projects.id, parseInt(id))).all();
+  const updated = await db.select().from(schema.projects).where(eq(schema.projects.id, parseInt(id)));
   if (updated.length === 0) {
     return Response.json({ success: false, error: "PROJECT_NOT_FOUND" }, { status: 404 });
   }

@@ -5,4 +5,5 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "homepage"
-database_id = "placeholder-replace-with-real-id"
+database_id = "089be3b6-3a0f-433f-8b6a-88fff875dbb8"
+migrations_dir = "db/migrations"

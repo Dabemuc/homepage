@@ -20,8 +20,8 @@ type EntryBody = {
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const db = drizzle(context.env.DB, { schema });
   const [sections, entries] = await Promise.all([
-    db.select().from(schema.careerSections).orderBy(schema.careerSections.display_order).all(),
-    db.select().from(schema.careerEntries).orderBy(schema.careerEntries.display_order).all(),
+    db.select().from(schema.careerSections).orderBy(schema.careerSections.display_order),
+    db.select().from(schema.careerEntries).orderBy(schema.careerEntries.display_order),
   ]);
 
   const data = sections.map((section) => ({
@@ -61,13 +61,13 @@ export const onRequestPut: PagesFunction<Env> = async (context) => {
   if (type === "entry") {
     const body = await context.request.json() as EntryBody;
     await db.update(schema.careerEntries).set(body).where(eq(schema.careerEntries.id, parseInt(id)));
-    const updated = await db.select().from(schema.careerEntries).where(eq(schema.careerEntries.id, parseInt(id))).all();
+    const updated = await db.select().from(schema.careerEntries).where(eq(schema.careerEntries.id, parseInt(id)));
     return Response.json({ success: true, data: updated[0] ?? null });
   }
 
   const body = await context.request.json() as SectionBody;
   await db.update(schema.careerSections).set(body).where(eq(schema.careerSections.id, parseInt(id)));
-  const updated = await db.select().from(schema.careerSections).where(eq(schema.careerSections.id, parseInt(id))).all();
+  const updated = await db.select().from(schema.careerSections).where(eq(schema.careerSections.id, parseInt(id)));
   return Response.json({ success: true, data: updated[0] ?? null });
 };
 
