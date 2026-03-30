@@ -1,8 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth, UserButton } from "@clerk/clerk-react";
-import { Separator } from "@/components/ui/separator";
-import { Home, User, FolderOpen, Briefcase, Share2 } from "lucide-react";
+import { Home, User, FolderOpen, Briefcase, Share2, Menu, X, ExternalLink } from "lucide-react";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: Home, exact: true },
@@ -16,12 +15,18 @@ export default function AdminLayout() {
   const { isLoaded, isSignedIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
       navigate("/sign-in", { replace: true });
     }
   }, [isLoaded, isSignedIn, navigate]);
+
+  // Close mobile nav on route change
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [location.pathname]);
 
   if (!isLoaded) {
     return (
@@ -31,49 +36,79 @@ export default function AdminLayout() {
     );
   }
 
-  if (!isSignedIn) {
-    return null;
-  }
+  if (!isSignedIn) return null;
+
+  const NavLinks = ({ onClick }: { onClick?: () => void }) => (
+    <>
+      {navItems.map(({ to, label, icon: Icon, exact }) => {
+        const isActive = exact
+          ? location.pathname === to
+          : location.pathname.startsWith(to);
+        return (
+          <Link
+            key={to}
+            to={to}
+            onClick={onClick}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+              isActive
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground"
+            }`}
+          >
+            <Icon className="w-4 h-4" />
+            {label}
+          </Link>
+        );
+      })}
+    </>
+  );
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Sidebar */}
-      <aside className="w-56 border-r flex flex-col flex-shrink-0">
+
+      {/* ── Desktop sidebar ── */}
+      <aside className="hidden md:flex w-56 border-r flex-col flex-shrink-0">
         <div className="h-14 px-4 font-semibold text-lg border-b flex items-center">Admin</div>
         <nav className="flex-1 p-2 space-y-1">
-          {navItems.map(({ to, label, icon: Icon, exact }) => {
-            const isActive = exact
-              ? location.pathname === to
-              : location.pathname.startsWith(to);
-            return (
-              <Link
-                key={to}
-                to={to}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {label}
-              </Link>
-            );
-          })}
+          <NavLinks />
         </nav>
-        <Separator />
-        <div className="p-4 flex items-center gap-2">
-          <UserButton afterSignOutUrl="/" />
-          <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">
-            View site
-          </Link>
-        </div>
       </aside>
 
-      {/* Main content */}
+      {/* ── Main content ── */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Header */}
-        <header className="h-14 border-b px-4 flex items-center justify-end flex-shrink-0" />
+
+        {/* Top bar */}
+        <header className="h-14 border-b px-4 flex items-center justify-between flex-shrink-0">
+          {/* Left: burger on mobile, "Admin" label on desktop (sidebar already shows it) */}
+          <button
+            className="md:hidden inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+            onClick={() => setMobileNavOpen((v) => !v)}
+            aria-label="Toggle navigation"
+          >
+            {mobileNavOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+          <span className="hidden md:block" />
+
+          {/* Right: back to site + user */}
+          <div className="flex items-center gap-2">
+            <Link
+              to="/"
+              aria-label="View site"
+              title="View site"
+              className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </Link>
+            <UserButton afterSignOutUrl="/" />
+          </div>
+        </header>
+
+        {/* Mobile dropdown nav */}
+        {mobileNavOpen && (
+          <nav className="md:hidden border-b bg-background px-3 py-2 space-y-1 flex-shrink-0">
+            <NavLinks onClick={() => setMobileNavOpen(false)} />
+          </nav>
+        )}
 
         <div className="flex-1 p-6 overflow-auto min-h-0">
           <Outlet />
