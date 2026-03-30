@@ -10,9 +10,9 @@ export default function CareerSection({ sections }: Props) {
 
   return (
     <section className="py-20 px-6 max-w-5xl mx-auto">
-      <div className="mb-12">
+      <div className="mb-12 text-center md:text-left">
         <h2 className="text-2xl font-bold tracking-tight text-foreground">Career</h2>
-        <div className="mt-2 h-px w-12 bg-gradient-to-r from-primary to-transparent rounded-full" />
+        <div className="mt-2 h-px w-12 bg-gradient-to-r from-primary to-transparent rounded-full mx-auto md:mx-0" />
       </div>
 
       <div className="mb-6 text-center">
