@@ -57,7 +57,7 @@ export default function HomePage() {
       />
 
       {/* Top bar */}
-      <header className="fixed top-0 inset-x-0 z-40 p-3 flex items-center justify-between">
+      <header className="fixed top-0 inset-x-0 z-40 p-3 flex items-center justify-between bg-background/40 backdrop-blur-md border-b border-border/40">
         {/* Socials — left side */}
         <div className="flex gap-1">
           {visibleSocials.map((social) => (
