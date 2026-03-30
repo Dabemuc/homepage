@@ -1,5 +1,6 @@
 import type { CareerSection } from "@/lib/api";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type Props = {
   sections: CareerSection[];
@@ -53,7 +54,7 @@ export default function CareerTimeline({ sections }: Props) {
                         <h4 className="font-semibold text-sm mb-2 text-foreground">{entry.title}</h4>
                         {entry.description && (
                           <div className="text-sm text-muted-foreground prose prose-sm dark:prose-invert max-w-none">
-                            <ReactMarkdown>{entry.description}</ReactMarkdown>
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.description}</ReactMarkdown>
                           </div>
                         )}
                       </div>
@@ -97,7 +98,7 @@ export default function CareerTimeline({ sections }: Props) {
                       <h4 className="font-semibold text-sm mb-2 text-foreground">{entry.title}</h4>
                       {entry.description && (
                         <div className="text-sm text-muted-foreground prose prose-sm dark:prose-invert max-w-none">
-                          <ReactMarkdown>{entry.description}</ReactMarkdown>
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.description}</ReactMarkdown>
                         </div>
                       )}
                     </div>

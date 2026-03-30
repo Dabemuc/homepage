@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Github } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import type { Project } from "@/lib/api";
 
 type Props = {
@@ -65,7 +66,7 @@ export default function ProjectModal({ project, onClose }: Props) {
           </div>
           <div className="prose prose-sm dark:prose-invert max-w-none">
             {project.description && (
-              <ReactMarkdown>{project.description}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{project.description}</ReactMarkdown>
             )}
           </div>
         </div>
