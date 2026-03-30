@@ -77,12 +77,20 @@ export default function CareerTimeline({ sections }: Props) {
             </div>
 
             {/* ── Mobile: single continuous left line ── */}
-            <div className="md:hidden border-l-2 border-border/50 ml-3 space-y-5">
+            <div className="md:hidden relative space-y-5">
+              {/* Line — fades only at top/bottom, cards are unaffected */}
+              <div
+                className="absolute left-[5px] top-0 bottom-0 w-0.5 pointer-events-none"
+                style={{
+                  background: "var(--border)",
+                  maskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+                }}
+              />
               {reversedEntries.map((entry) => (
-                <div key={entry.id} className="relative pl-6">
-                  {/* Dot centered on the border */}
+                <div key={entry.id} className="relative pl-8">
+                  {/* Dot above the line */}
                   <div
-                    className="absolute -left-[7px] top-3 w-3 h-3 rounded-full ring-2 ring-background shadow-sm"
+                    className="absolute left-0 top-3 w-3 h-3 rounded-full ring-2 ring-background z-10 shadow-sm"
                     style={{ background: "var(--brand)" }}
                   />
                   <div className="rounded-xl border border-border/70 bg-card p-4 shadow-sm group-hover/section:shadow-[0_0_18px_2px_var(--brand-glow)] group-hover/section:border-primary/20 transition-all duration-300">
