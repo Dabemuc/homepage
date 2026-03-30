@@ -18,12 +18,12 @@ export default function ProjectModal({ project, onClose }: Props) {
   return (
     <Dialog open={!!project} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="flex flex-col w-[90vw] max-w-2xl h-[75vh] p-0 gap-0 overflow-hidden">
-        {/* Header: title + links */}
-        <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4 border-b border-border/50 flex-shrink-0">
+        {/* Header: title + links inline, pr-10 keeps clear of the close button */}
+        <div className="flex items-center gap-3 px-6 pt-6 pb-4 pr-12 border-b border-border/50 flex-shrink-0">
           <h2 className="text-xl font-semibold leading-snug text-foreground">
             {project.title}
           </h2>
-          <div className="flex gap-2 flex-shrink-0 mt-0.5">
+          <div className="flex gap-2 flex-shrink-0">
             {project.repo_url && (
               <a
                 href={project.repo_url}
