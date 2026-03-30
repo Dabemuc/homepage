@@ -77,21 +77,14 @@ export default function CareerTimeline({ sections }: Props) {
                     <div className="flex-1" />
                   </div>
 
-                  {/* Mobile: single column */}
-                  <div className="md:hidden flex gap-4">
-                    <div className="flex flex-col items-center">
-                      <div
-                        className="w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 shadow-sm"
-                        style={{ background: "var(--brand)" }}
-                      />
-                      {entryIndex < section.entries.length - 1 && (
-                        <div
-                          className="w-px flex-1 mt-1"
-                          style={{ background: "var(--border)" }}
-                        />
-                      )}
-                    </div>
-                    <div className="rounded-xl border border-border/70 bg-card p-4 shadow-sm mb-4 flex-1 group-hover/section:shadow-[0_0_18px_2px_var(--brand-glow)] group-hover/section:border-primary/20 transition-all duration-300">
+                  {/* Mobile: continuous left-border line with absolute dots */}
+                  <div className="md:hidden relative pl-6 border-l border-border/60">
+                    {/* Dot on the line */}
+                    <div
+                      className="absolute -left-[5px] top-3 w-2.5 h-2.5 rounded-full shadow-sm ring-2 ring-background"
+                      style={{ background: "var(--brand)" }}
+                    />
+                    <div className="rounded-xl border border-border/70 bg-card p-4 shadow-sm group-hover/section:shadow-[0_0_18px_2px_var(--brand-glow)] group-hover/section:border-primary/20 transition-all duration-300">
                       <div className="text-xs font-medium text-primary/80 mb-1.5 tracking-wide">
                         {entry.timestamp}
                       </div>
