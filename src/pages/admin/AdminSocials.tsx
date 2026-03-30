@@ -29,6 +29,47 @@ const emptyForm: SocialForm = {
   visible: true,
 };
 
+function SocialFormFields({
+  form, setForm, onSave, onCancel,
+}: {
+  form: SocialForm;
+  setForm: React.Dispatch<React.SetStateAction<SocialForm>>;
+  onSave: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm font-medium mb-1 block">Platform</label>
+          <Input value={form.platform} onChange={(e) => setForm((f) => ({ ...f, platform: e.target.value }))} placeholder="github" />
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Label</label>
+          <Input value={form.label} onChange={(e) => setForm((f) => ({ ...f, label: e.target.value }))} placeholder="GitHub" />
+        </div>
+      </div>
+      <div>
+        <label className="text-sm font-medium mb-1 block">URL</label>
+        <Input value={form.url} onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://github.com/..." />
+      </div>
+      <div>
+        <label className="text-sm font-medium mb-1 block">Lucide Icon Name</label>
+        <Input value={form.icon} onChange={(e) => setForm((f) => ({ ...f, icon: e.target.value }))} placeholder="Github, Linkedin, Mail, Twitter..." />
+        <p className="text-xs text-muted-foreground mt-1">Use a PascalCase lucide-react icon name</p>
+      </div>
+      <div className="flex items-center gap-2">
+        <Switch checked={form.visible} onCheckedChange={(v) => setForm((f) => ({ ...f, visible: v }))} />
+        <label className="text-sm">Visible</label>
+      </div>
+      <div className="flex gap-2">
+        <Button onClick={onSave}>Save</Button>
+        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+      </div>
+    </>
+  );
+}
+
 export default function AdminSocials() {
   const { getToken } = useAuth();
   const [socials, setSocials] = useState<SocialLink[]>([]);
@@ -103,41 +144,24 @@ export default function AdminSocials() {
         )}
       </div>
 
-      {(showNew || editingId !== null) && (
+      {showNew && (
         <div className="border rounded-xl p-4 mb-6 space-y-4 bg-card">
-          <h2 className="font-semibold">{editingId !== null ? "Edit Social Link" : "New Social Link"}</h2>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium mb-1 block">Platform</label>
-              <Input value={form.platform} onChange={(e) => setForm((f) => ({ ...f, platform: e.target.value }))} placeholder="github" />
-            </div>
-            <div>
-              <label className="text-sm font-medium mb-1 block">Label</label>
-              <Input value={form.label} onChange={(e) => setForm((f) => ({ ...f, label: e.target.value }))} placeholder="GitHub" />
-            </div>
-          </div>
-          <div>
-            <label className="text-sm font-medium mb-1 block">URL</label>
-            <Input value={form.url} onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://github.com/..." />
-          </div>
-          <div>
-            <label className="text-sm font-medium mb-1 block">Lucide Icon Name</label>
-            <Input value={form.icon} onChange={(e) => setForm((f) => ({ ...f, icon: e.target.value }))} placeholder="Github, Linkedin, Mail, Twitter..." />
-            <p className="text-xs text-muted-foreground mt-1">Use a PascalCase lucide-react icon name</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Switch checked={form.visible} onCheckedChange={(v) => setForm((f) => ({ ...f, visible: v }))} />
-            <label className="text-sm">Visible</label>
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={save}>Save</Button>
-            <Button variant="outline" onClick={() => { setEditingId(null); setShowNew(false); setForm(emptyForm); }}>Cancel</Button>
-          </div>
+          <h2 className="font-semibold">New Social Link</h2>
+          <SocialFormFields form={form} setForm={setForm} onSave={save} onCancel={() => { setShowNew(false); setForm(emptyForm); }} />
         </div>
       )}
 
       <div className="space-y-3">
-        {socials.map((social, index) => (
+        {socials.map((social, index) => {
+          if (editingId === social.id) {
+            return (
+              <div key={social.id} className="border rounded-xl p-4 bg-card space-y-4">
+                <h2 className="font-semibold">Edit Social Link</h2>
+                <SocialFormFields form={form} setForm={setForm} onSave={save} onCancel={() => { setEditingId(null); setForm(emptyForm); }} />
+              </div>
+            );
+          }
+          return (
           <div key={social.id} className="border rounded-xl p-4 bg-card flex items-center gap-4">
             <div className="flex flex-col gap-1">
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveUp(index)} disabled={index === 0}>
@@ -157,7 +181,7 @@ export default function AdminSocials() {
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <Switch checked={!!social.visible} onCheckedChange={() => toggleVisible(social)} />
-              <Button variant="ghost" size="icon" onClick={() => { setEditingId(social.id); setForm({ platform: social.platform ?? "", label: social.label ?? "", url: social.url ?? "", icon: social.icon ?? "", visible: !!social.visible }); setShowNew(false); }}>
+              <Button variant="ghost" size="icon" onClick={() => { setForm({ platform: social.platform ?? "", label: social.label ?? "", url: social.url ?? "", icon: social.icon ?? "", visible: !!social.visible }); setShowNew(false); setEditingId(social.id); }}>
                 <Pencil className="w-4 h-4" />
               </Button>
               <Button variant="ghost" size="icon" onClick={() => remove(social.id)}>
@@ -165,7 +189,8 @@ export default function AdminSocials() {
               </Button>
             </div>
           </div>
-        ))}
+          );
+        })}
         {socials.length === 0 && (
           <div className="text-center text-muted-foreground py-8">No social links yet. Add one above.</div>
         )}
