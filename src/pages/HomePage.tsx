@@ -31,7 +31,7 @@ export default function HomePage() {
         aria-hidden
         style={{
           background:
-            "radial-gradient(ellipse 90% 60% at 50% -5%, var(--brand-glow), transparent 70%)",
+            "radial-gradient(ellipse 80% 45% at 50% -5%, var(--brand-glow), transparent 70%)",
         }}
       />
 

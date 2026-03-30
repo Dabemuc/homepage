@@ -12,11 +12,9 @@ export default function ProjectCard({ project, onClick }: Props) {
 
   return (
     <div
-      className="group relative rounded-xl border border-border/70 bg-card text-card-foreground shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300 cursor-pointer overflow-hidden"
+      className="group relative rounded-xl border border-border/70 bg-card text-card-foreground shadow-sm hover:shadow-[0_0_20px_2px_var(--brand-glow)] hover:border-primary/25 transition-all duration-300 cursor-pointer overflow-hidden"
       onClick={onClick}
     >
-      {/* Subtle gradient overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-subtle/0 to-brand-subtle/0 group-hover:from-brand-subtle/50 group-hover:to-transparent transition-all duration-300 pointer-events-none z-10 rounded-xl" />
 
       {/* Screenshot */}
       <div className="aspect-video bg-muted overflow-hidden">
