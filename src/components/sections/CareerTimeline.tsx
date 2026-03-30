@@ -27,13 +27,6 @@ export default function CareerTimeline({ sections }: Props) {
           key={section.id}
           className="group/section relative mb-20 transition-opacity duration-300"
         >
-          {/* Section title badge */}
-          <div className="flex justify-center mb-10">
-            <div className="relative z-10 px-5 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase shadow-sm border border-primary/20 bg-gradient-to-r from-primary/10 via-brand-subtle to-primary/10 text-primary transition-shadow duration-200 group-hover/section:shadow-md group-hover/section:border-primary/40">
-              {section.title}
-            </div>
-          </div>
-
           {/* Entries */}
           <div className="space-y-8">
             {section.entries.slice().reverse().map((entry, entryIndex) => {
@@ -112,6 +105,13 @@ export default function CareerTimeline({ sections }: Props) {
                 </div>
               );
             })}
+          </div>
+
+          {/* Section title badge — shown at the bottom as a "start" marker */}
+          <div className="flex justify-center mt-10">
+            <div className="relative z-10 px-5 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase shadow-sm border border-primary/20 bg-gradient-to-r from-primary/10 via-brand-subtle to-primary/10 text-primary transition-shadow duration-200 group-hover/section:shadow-md group-hover/section:border-primary/40">
+              {section.title}
+            </div>
           </div>
 
           {/* Dim overlay for other sections on hover */}

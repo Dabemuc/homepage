@@ -39,9 +39,9 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex h-screen overflow-hidden bg-background">
       {/* Sidebar */}
-      <aside className="w-56 border-r flex flex-col">
+      <aside className="w-56 border-r flex flex-col flex-shrink-0">
         <div className="h-14 px-4 font-semibold text-lg border-b flex items-center">Admin</div>
         <nav className="flex-1 p-2 space-y-1">
           {navItems.map(({ to, label, icon: Icon, exact }) => {
@@ -74,9 +74,9 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
-        <header className="h-14 border-b px-4 flex items-center justify-end">
+        <header className="h-14 border-b px-4 flex items-center justify-end flex-shrink-0">
           <Button
             variant="ghost"
             size="icon"
@@ -88,7 +88,7 @@ export default function AdminLayout() {
           </Button>
         </header>
 
-        <div className="flex-1 p-6 overflow-auto">
+        <div className="flex-1 p-6 overflow-auto min-h-0">
           <Outlet />
         </div>
       </main>
