@@ -151,3 +151,7 @@ npm run cf-typegen
 ├── wrangler.jsonc
 └── drizzle.config.ts
 ```
+
+## Disclaimer
+
+This Project was "vibe-coded" (heavy use of AI)
