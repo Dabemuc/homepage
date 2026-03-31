@@ -29,13 +29,15 @@ npm install
 
 ### 2. Set up environment variables
 
-Create a `.dev.vars` file (read by the Cloudflare Vite plugin):
+Copy the example files and fill in your Clerk **test** keys:
 
+```bash
+cp .dev.vars.example .dev.vars
+cp .env.local.example .env.local
 ```
-CLERK_SECRET_KEY=sk_test_...
-ADMIN_CLERK_USER_ID=user_...
-VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
-```
+
+- `.dev.vars` — Worker secrets (`CLERK_SECRET_KEY`, `ADMIN_CLERK_USER_ID`), loaded by wrangler automatically
+- `.env.local` — frontend env vars (`VITE_CLERK_PUBLISHABLE_KEY`), loaded by Vite automatically
 
 ### 3. Apply migrations and seed
 
@@ -83,14 +85,36 @@ Output is in `dist/`.
 
 ## Deployment (Cloudflare Workers)
 
+### 1. Set up production environment variables
+
+Copy the example file and fill in your Clerk **live** keys:
+
+```bash
+cp .env.production.example .env.production
+```
+
+`.env.production` is used by Vite at build time — `VITE_CLERK_PUBLISHABLE_KEY` gets bundled into the frontend assets.
+
+Worker secrets are set directly in Cloudflare (not in any file):
+
+```bash
+npx wrangler secret put CLERK_SECRET_KEY       # sk_live_...
+npx wrangler secret put ADMIN_CLERK_USER_ID    # user_...
+```
+
+### 2. First-time setup
+
 1. Create a D1 database: `npx wrangler d1 create homepage`
 2. Update `database_id` in `wrangler.jsonc`
 3. Apply migrations to remote: `npx wrangler d1 migrations apply homepage --remote`
-4. Deploy: `npm run deploy`
-5. Set secrets in Cloudflare dashboard or via wrangler:
-   - `npx wrangler secret put CLERK_SECRET_KEY`
-   - `npx wrangler secret put ADMIN_CLERK_USER_ID`
-   - `npx wrangler secret put VITE_CLERK_PUBLISHABLE_KEY`
+
+### 3. Deploy
+
+```bash
+npm run deploy
+```
+
+Wrangler builds the Vite app (using `.env.production`) and deploys the Worker + static assets together.
 
 ## Regenerate Worker Types
 
