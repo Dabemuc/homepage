@@ -38,7 +38,7 @@ export default function IntroSection({ intro }: Props) {
             </p>
           )}
           {intro.bio && (
-            <p className="text-base leading-relaxed text-muted-foreground max-w-xl">
+            <p className="text-base leading-relaxed text-muted-foreground max-w-xl whitespace-pre-wrap">
               {intro.bio}
             </p>
           )}
