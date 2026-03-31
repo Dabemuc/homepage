@@ -83,14 +83,14 @@ Output is in `dist/`.
 
 ## Deployment (Cloudflare Workers)
 
-1. Create a D1 database: `wrangler d1 create homepage`
+1. Create a D1 database: `npx wrangler d1 create homepage`
 2. Update `database_id` in `wrangler.jsonc`
-3. Apply migrations to remote: `wrangler d1 migrations apply homepage --remote`
+3. Apply migrations to remote: `npx wrangler d1 migrations apply homepage --remote`
 4. Deploy: `npm run deploy`
 5. Set secrets in Cloudflare dashboard or via wrangler:
-   - `wrangler secret put CLERK_SECRET_KEY`
-   - `wrangler secret put ADMIN_CLERK_USER_ID`
-   - `wrangler secret put VITE_CLERK_PUBLISHABLE_KEY`
+   - `npx wrangler secret put CLERK_SECRET_KEY`
+   - `npx wrangler secret put ADMIN_CLERK_USER_ID`
+   - `npx wrangler secret put VITE_CLERK_PUBLISHABLE_KEY`
 
 ## Regenerate Worker Types
 
