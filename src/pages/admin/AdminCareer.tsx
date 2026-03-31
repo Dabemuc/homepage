@@ -42,7 +42,9 @@ export default function AdminCareer() {
   useEffect(() => { load(); }, []);
 
   const saveSection = async () => {
-    const data = { ...sectionForm, display_order: sections.length + 1 };
+    const data = editingSectionId !== null
+      ? { ...sectionForm }
+      : { ...sectionForm, display_order: sections.length + 1 };
     if (editingSectionId !== null) {
       const updated = await adminUpdateSection(editingSectionId, data, getToken);
       setSections((prev) => prev.map((s) => (s.id === editingSectionId ? { ...s, ...updated } : s)));
@@ -63,7 +65,9 @@ export default function AdminCareer() {
 
   const saveEntry = async (sectionId: number) => {
     const entries = sections.find((s) => s.id === sectionId)?.entries ?? [];
-    const data = { ...entryForm, section_id: sectionId, display_order: entries.length + 1 };
+    const data = editingEntryId !== null
+      ? { ...entryForm, section_id: sectionId }
+      : { ...entryForm, section_id: sectionId, display_order: entries.length + 1 };
     if (editingEntryId !== null) {
       const updated = await adminUpdateEntry(editingEntryId, data, getToken);
       setSections((prev) =>

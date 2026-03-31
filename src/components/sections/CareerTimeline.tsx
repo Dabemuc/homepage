@@ -27,8 +27,6 @@ function EntryCard({ entry }: { entry: CareerSection["entries"][number] }) {
 export default function CareerTimeline({ sections }: Props) {
   if (sections.length === 0) return null;
 
-  const reversedSections = sections.slice().reverse();
-
   return (
     <div className="relative">
       {/* Desktop center gradient line */}
@@ -41,15 +39,15 @@ export default function CareerTimeline({ sections }: Props) {
         }}
       />
 
-      {reversedSections.map((section) => {
-        const reversedEntries = section.entries.slice().reverse();
+      {sections.map((section) => {
+        const entries = section.entries;
 
         return (
           <div key={section.id} className="group/section relative mb-20">
 
             {/* ── Desktop: alternating left/right ── */}
             <div className="hidden md:block space-y-8">
-              {reversedEntries.map((entry, entryIndex) => {
+              {entries.map((entry, entryIndex) => {
                 const isLeft = entryIndex % 2 === 0;
                 return (
                   <div key={entry.id} className="relative">
@@ -86,7 +84,7 @@ export default function CareerTimeline({ sections }: Props) {
                   maskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
                 }}
               />
-              {reversedEntries.map((entry) => (
+              {entries.map((entry) => (
                 <div key={entry.id} className="relative pl-8">
                   {/* Dot above the line */}
                   <div

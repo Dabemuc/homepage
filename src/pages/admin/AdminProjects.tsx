@@ -157,7 +157,9 @@ export default function AdminProjects() {
   };
 
   const save = async () => {
-    const data = { ...form, display_order: projects.length + 1 };
+    const data = editingId !== null
+      ? { ...form }
+      : { ...form, display_order: projects.length + 1 };
     if (editingId !== null) {
       const updated = await adminUpdateProject(editingId, data, getToken);
       setProjects((prev) => prev.map((p) => (p.id === editingId ? updated : p)));
