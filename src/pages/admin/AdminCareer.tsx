@@ -44,13 +44,13 @@ export default function AdminCareer() {
   const saveSection = async () => {
     const data = editingSectionId !== null
       ? { ...sectionForm }
-      : { ...sectionForm, display_order: sections.length + 1 };
+      : { ...sectionForm, display_order: 0 };
     if (editingSectionId !== null) {
       const updated = await adminUpdateSection(editingSectionId, data, getToken);
       setSections((prev) => prev.map((s) => (s.id === editingSectionId ? { ...s, ...updated } : s)));
     } else {
       const created = await adminCreateSection(data, getToken) as CareerSection;
-      setSections((prev) => [...prev, { ...created, entries: [] }]);
+      setSections((prev) => [{ ...created, entries: [] }, ...prev]);
     }
     setEditingSectionId(null);
     setShowNewSection(false);
@@ -64,10 +64,9 @@ export default function AdminCareer() {
   };
 
   const saveEntry = async (sectionId: number) => {
-    const entries = sections.find((s) => s.id === sectionId)?.entries ?? [];
     const data = editingEntryId !== null
       ? { ...entryForm, section_id: sectionId }
-      : { ...entryForm, section_id: sectionId, display_order: entries.length + 1 };
+      : { ...entryForm, section_id: sectionId, display_order: 0 };
     if (editingEntryId !== null) {
       const updated = await adminUpdateEntry(editingEntryId, data, getToken);
       setSections((prev) =>
@@ -80,7 +79,7 @@ export default function AdminCareer() {
     } else {
       const created = await adminCreateEntry(data, getToken);
       setSections((prev) =>
-        prev.map((s) => (s.id === sectionId ? { ...s, entries: [...s.entries, created] } : s))
+        prev.map((s) => (s.id === sectionId ? { ...s, entries: [created, ...s.entries] } : s))
       );
     }
     setEditingEntryId(null);

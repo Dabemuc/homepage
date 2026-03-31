@@ -159,13 +159,13 @@ export default function AdminProjects() {
   const save = async () => {
     const data = editingId !== null
       ? { ...form }
-      : { ...form, display_order: projects.length + 1 };
+      : { ...form, display_order: 0 };
     if (editingId !== null) {
       const updated = await adminUpdateProject(editingId, data, getToken);
       setProjects((prev) => prev.map((p) => (p.id === editingId ? updated : p)));
     } else {
       const created = await adminCreateProject(data, getToken);
-      setProjects((prev) => [...prev, created]);
+      setProjects((prev) => [created, ...prev]);
     }
     cancelEdit();
   };
