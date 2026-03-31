@@ -1,0 +1,2 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://*.clerk.dev; connect-src 'self' https://*.clerk.accounts.dev https://*.clerk.dev wss://*.clerk.accounts.dev; frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.dev; img-src 'self' data: blob: https://img.clerk.com https:; style-src 'self' 'unsafe-inline'; font-src 'self'; worker-src 'self' blob:; object-src 'none';

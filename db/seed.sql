@@ -18,7 +18,20 @@ INSERT OR REPLACE INTO intro (id, name, tagline, bio, avatar_url) VALUES (
 INSERT INTO projects (title, short_description, description, screenshot, repo_url, website_url, tags, display_order, visible) VALUES (
   'Homepage',
   'Personal portfolio with admin UI, built on Cloudflare Pages + D1.',
-  '## Homepage\n\nA fully configurable personal portfolio site.\n\n### Features\n- Public homepage with intro, projects, career timeline\n- Admin UI for all content\n- Hosted on Cloudflare Pages with D1 database\n- Dark/light mode\n\n### Tech Stack\n- Vite + React 19\n- TypeScript\n- Tailwind CSS v4\n- Cloudflare Pages Functions\n- Drizzle ORM + D1\n- Clerk auth',
+  'A fully configurable personal portfolio site.
+  ### Features
+  - Public homepage with intro, projects, career timeline
+  - Admin UI for all content
+  - Hosted on Cloudflare Pages with D1 database
+  - Dark/light mode
+
+  ### Tech Stack
+  - Vite + React 19
+  - TypeScript
+  - Tailwind CSS v4
+  - Cloudflare Pages Functions
+  - Drizzle ORM + D1
+  - Clerk auth',
   null,
   'https://github.com/dabemuc/homepage',
   null,
@@ -30,7 +43,16 @@ INSERT INTO projects (title, short_description, description, screenshot, repo_ur
 INSERT INTO projects (title, short_description, description, screenshot, repo_url, website_url, tags, display_order, visible) VALUES (
   'CLI Tool',
   'A blazing-fast command-line utility written in Rust.',
-  '## CLI Tool\n\nA high-performance CLI utility built with Rust.\n\n### Features\n- Sub-millisecond startup time\n- Cross-platform binaries\n- Comprehensive test suite\n\n### Tech Stack\n- Rust\n- clap for argument parsing\n- GitHub Actions for CI/CD',
+  'A high-performance CLI utility built with Rust
+  ### Features
+  - Sub-millisecond startup time
+  - Cross-platform binaries
+  - Comprehensive test suite
+
+  ### Tech Stack
+  - Rust
+  - clap for argument parsing
+  - GitHub Actions for CI/CD',
   null,
   'https://github.com/dabemuc/cli-tool',
   null,
@@ -42,7 +64,17 @@ INSERT INTO projects (title, short_description, description, screenshot, repo_ur
 INSERT INTO projects (title, short_description, description, screenshot, repo_url, website_url, tags, display_order, visible) VALUES (
   'API Gateway',
   'Lightweight API gateway with rate limiting and JWT auth.',
-  '## API Gateway\n\nA lightweight, high-performance API gateway.\n\n### Features\n- Rate limiting per route and client\n- JWT verification\n- Request logging and tracing\n- Hot reload configuration\n\n### Tech Stack\n- Go\n- Redis for rate limit state\n- Docker Compose',
+  'A lightweight, high-performance API gateway.
+  ### Features
+  - Rate limiting per route and client
+  - JWT verification
+  - Request logging and tracing
+  - Hot reload configuration
+
+  ### Tech Stack
+  - Go
+  - Redis for rate limit state
+  - Docker Compose',
   null,
   'https://github.com/dabemuc/api-gateway',
   null,

@@ -14,9 +14,7 @@ A personal portfolio homepage with a fully configurable admin UI, hosted on Clou
 ## Features
 
 - Public homepage with intro, project cards, career timeline
-- Fixed socials panel with localStorage collapse state
 - Project detail modal with Markdown rendering
-- Dark/light mode toggle (next-themes)
 - Admin UI for all content (intro, projects, career, socials)
 - Clerk-protected admin routes
 - Full CRUD admin API endpoints with JWT middleware

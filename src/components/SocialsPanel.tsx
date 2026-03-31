@@ -19,7 +19,6 @@ export default function SocialsPanel({ socials }: Props) {
   const [mounted, setMounted] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
-  // Mount guard - renders nothing until after first mount
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored !== null) {
@@ -46,34 +45,34 @@ export default function SocialsPanel({ socials }: Props) {
       {/* Handle / peek tab */}
       <button
         onClick={toggle}
-        className="flex items-center justify-center w-8 h-16 bg-card border border-r-0 rounded-l-lg shadow-md hover:bg-accent transition-colors flex-shrink-0"
+        className="flex items-center justify-center w-8 h-14 bg-card/80 backdrop-blur-md border border-r-0 border-border/60 rounded-l-lg shadow-md hover:bg-accent/50 transition-colors flex-shrink-0"
         aria-label={collapsed ? "Expand socials panel" : "Collapse socials panel"}
       >
         {collapsed ? (
-          <ChevronLeft className="w-4 h-4 text-muted-foreground" />
+          <ChevronLeft className="w-3.5 h-3.5 text-muted-foreground" />
         ) : (
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
         )}
       </button>
 
       {/* Panel content */}
-      <div className="bg-card border rounded-l-none rounded-xl shadow-lg p-3 space-y-2 min-w-[120px]">
+      <div className="bg-card/80 backdrop-blur-md border border-l-0 border-border/60 rounded-r-none rounded-xl shadow-xl p-3 space-y-1 min-w-[128px]">
         {socials.map((social) => (
           <a
             key={social.id}
             href={social.url ?? "#"}
             target={social.url?.startsWith("mailto:") ? undefined : "_blank"}
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-accent transition-colors group"
+            className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-accent/60 transition-colors group"
             title={social.label ?? social.platform ?? ""}
           >
             {social.icon && (
               <DynamicIcon
                 name={social.icon}
-                className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0"
+                className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors duration-200 flex-shrink-0"
               />
             )}
-            <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+            <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-200">
               {social.label}
             </span>
           </a>

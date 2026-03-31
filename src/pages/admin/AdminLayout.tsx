@@ -1,10 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth, UserButton } from "@clerk/clerk-react";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Sun, Moon, Home, User, FolderOpen, Briefcase, Share2 } from "lucide-react";
+import { Home, User, FolderOpen, Briefcase, Share2, Menu, X, Globe } from "lucide-react";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: Home, exact: true },
@@ -18,13 +15,18 @@ export default function AdminLayout() {
   const { isLoaded, isSignedIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { theme, setTheme } = useTheme();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
       navigate("/sign-in", { replace: true });
     }
   }, [isLoaded, isSignedIn, navigate]);
+
+  // Close mobile nav on route change
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [location.pathname]);
 
   if (!isLoaded) {
     return (
@@ -34,61 +36,86 @@ export default function AdminLayout() {
     );
   }
 
-  if (!isSignedIn) {
-    return null;
-  }
+  if (!isSignedIn) return null;
+
+  const NavLinks = ({ onClick }: { onClick?: () => void }) => (
+    <>
+      {navItems.map(({ to, label, icon: Icon, exact }) => {
+        const isActive = exact
+          ? location.pathname === to
+          : location.pathname.startsWith(to);
+        return (
+          <Link
+            key={to}
+            to={to}
+            onClick={onClick}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+              isActive
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground"
+            }`}
+          >
+            <Icon className="w-4 h-4" />
+            {label}
+          </Link>
+        );
+      })}
+    </>
+  );
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Sidebar */}
-      <aside className="w-56 border-r flex flex-col">
-        <div className="p-4 font-semibold text-lg border-b">Admin</div>
+    <div className="flex h-screen overflow-hidden bg-background">
+
+      {/* ── Desktop sidebar ── */}
+      <aside className="hidden md:flex w-56 border-r flex-col flex-shrink-0">
+        <div className="h-14 px-4 font-semibold text-lg border-b flex items-center">Admin</div>
         <nav className="flex-1 p-2 space-y-1">
-          {navItems.map(({ to, label, icon: Icon, exact }) => {
-            const isActive = exact
-              ? location.pathname === to
-              : location.pathname.startsWith(to);
-            return (
-              <Link
-                key={to}
-                to={to}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {label}
-              </Link>
-            );
-          })}
+          <NavLinks />
         </nav>
-        <Separator />
-        <div className="p-4 flex items-center gap-2">
-          <UserButton afterSignOutUrl="/" />
-          <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">
-            View site
-          </Link>
-        </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="border-b p-4 flex justify-end">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            aria-label="Toggle theme"
+      {/* ── Main content ── */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        {/* Top bar */}
+        <header className="h-14 border-b px-4 flex items-center justify-between flex-shrink-0">
+          {/* Left: burger on mobile */}
+          <button
+            className="md:hidden inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+            onClick={() => setMobileNavOpen((v) => !v)}
+            aria-label="Toggle navigation"
           >
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </Button>
+            {mobileNavOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+
+          {/* Center: "Admin" label on mobile */}
+          <span className="md:hidden absolute left-1/2 -translate-x-1/2 font-semibold text-sm text-foreground pointer-events-none">
+            Admin
+          </span>
+          <span className="hidden md:block" />
+
+          {/* Right: back to site + user */}
+          <div className="flex items-center gap-2">
+            <Link
+              to="/"
+              aria-label="View site"
+              title="View site"
+              className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+            >
+              <Globe className="w-4 h-4" />
+            </Link>
+            <UserButton afterSignOutUrl="/" />
+          </div>
         </header>
 
-        <div className="flex-1 p-6 overflow-auto">
+        {/* Mobile dropdown nav */}
+        {mobileNavOpen && (
+          <nav className="md:hidden border-b bg-background px-3 py-2 space-y-1 flex-shrink-0">
+            <NavLinks onClick={() => setMobileNavOpen(false)} />
+          </nav>
+        )}
+
+        <div className="flex-1 p-6 overflow-auto min-h-0">
           <Outlet />
         </div>
       </main>

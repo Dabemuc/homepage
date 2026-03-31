@@ -112,9 +112,9 @@ export default function AdminCareer() {
         )}
       </div>
 
-      {(showNewSection || editingSectionId !== null) && (
+      {showNewSection && (
         <div className="border rounded-xl p-4 mb-6 space-y-4 bg-card">
-          <h2 className="font-semibold">{editingSectionId !== null ? "Edit Section" : "New Section"}</h2>
+          <h2 className="font-semibold">New Section</h2>
           <div>
             <label className="text-sm font-medium mb-1 block">Title</label>
             <Input value={sectionForm.title} onChange={(e) => setSectionForm((f) => ({ ...f, title: e.target.value }))} />
@@ -125,7 +125,7 @@ export default function AdminCareer() {
           </div>
           <div className="flex gap-2">
             <Button onClick={saveSection}>Save</Button>
-            <Button variant="outline" onClick={() => { setEditingSectionId(null); setShowNewSection(false); setSectionForm(emptySectionForm); }}>Cancel</Button>
+            <Button variant="outline" onClick={() => { setShowNewSection(false); setSectionForm(emptySectionForm); }}>Cancel</Button>
           </div>
         </div>
       )}
@@ -133,17 +133,34 @@ export default function AdminCareer() {
       <div className="space-y-6">
         {sections.map((section) => (
           <div key={section.id} className="border rounded-xl bg-card overflow-hidden">
-            <div className="p-4 bg-muted/30 flex items-center gap-3">
-              <span className="font-semibold flex-1">{section.title}</span>
-              {!section.visible && <Badge variant="outline" className="text-xs">Hidden</Badge>}
-              <Switch checked={!!section.visible} onCheckedChange={() => toggleSectionVisible(section)} />
-              <Button variant="ghost" size="icon" onClick={() => { setEditingSectionId(section.id); setSectionForm({ title: section.title ?? "", visible: !!section.visible }); setShowNewSection(false); }}>
-                <Pencil className="w-4 h-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => deleteSection(section.id)}>
-                <Trash2 className="w-4 h-4 text-destructive" />
-              </Button>
-            </div>
+            {editingSectionId === section.id ? (
+              <div className="p-4 bg-muted/30 space-y-3">
+                <div>
+                  <label className="text-sm font-medium mb-1 block">Title</label>
+                  <Input value={sectionForm.title} onChange={(e) => setSectionForm((f) => ({ ...f, title: e.target.value }))} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch checked={sectionForm.visible} onCheckedChange={(v) => setSectionForm((f) => ({ ...f, visible: v }))} />
+                  <label className="text-sm">Visible</label>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={saveSection}>Save</Button>
+                  <Button size="sm" variant="outline" onClick={() => { setEditingSectionId(null); setSectionForm(emptySectionForm); }}>Cancel</Button>
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 bg-muted/30 flex items-center gap-3">
+                <span className="font-semibold flex-1">{section.title}</span>
+                {!section.visible && <Badge variant="outline" className="text-xs">Hidden</Badge>}
+                <Switch checked={!!section.visible} onCheckedChange={() => toggleSectionVisible(section)} />
+                <Button variant="ghost" size="icon" onClick={() => { setEditingSectionId(section.id); setSectionForm({ title: section.title ?? "", visible: !!section.visible }); setShowNewSection(false); }}>
+                  <Pencil className="w-4 h-4" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => deleteSection(section.id)}>
+                  <Trash2 className="w-4 h-4 text-destructive" />
+                </Button>
+              </div>
+            )}
 
             {/* Entries */}
             <div className="p-4 space-y-3">
