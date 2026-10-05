@@ -15,7 +15,8 @@ import {
   adminUpdateEntry,
   adminDeleteEntry,
 } from "@/lib/api";
-import type { CareerSection } from "@/lib/api";
+import type { CareerEntry, CareerSection } from "@/lib/api";
+import { persistOrder, swapped } from "@/lib/reorder";
 
 type SectionForm = { title: string; visible: boolean; active: boolean };
 type EntryForm = { timestamp: string; title: string; description: string };
@@ -50,7 +51,9 @@ export default function AdminCareer() {
       setSections((prev) => prev.map((s) => (s.id === editingSectionId ? { ...s, ...updated } : s)));
     } else {
       const created = await adminCreateSection(data, getToken) as CareerSection;
-      setSections((prev) => [{ ...created, entries: [] }, ...prev]);
+      const list = [{ ...created, entries: [] }, ...sections];
+      setSections(list);
+      setSections(await persistOrder(list, (id, display_order) => adminUpdateSection(id, { display_order }, getToken)));
     }
     setEditingSectionId(null);
     setShowNewSection(false);
@@ -78,13 +81,20 @@ export default function AdminCareer() {
       );
     } else {
       const created = await adminCreateEntry(data, getToken);
-      setSections((prev) =>
-        prev.map((s) => (s.id === sectionId ? { ...s, entries: [created, ...s.entries] } : s))
-      );
+      const section = sections.find((s) => s.id === sectionId);
+      await applyEntryOrder(sectionId, [created, ...(section?.entries ?? [])]);
     }
     setEditingEntryId(null);
     setShowNewEntry(null);
     setEntryForm(emptyEntryForm);
+  };
+
+  // Show a section's new entry order immediately, then persist it as 0..n-1 for all its entries
+  const applyEntryOrder = async (sectionId: number, entries: CareerEntry[]) => {
+    const setEntries = (list: CareerEntry[]) =>
+      setSections((prev) => prev.map((s) => (s.id === sectionId ? { ...s, entries: list } : s)));
+    setEntries(entries);
+    setEntries(await persistOrder(entries, (id, display_order) => adminUpdateEntry(id, { display_order }, getToken)));
   };
 
   const deleteEntry = async (sectionId: number, entryId: number) => {
@@ -205,28 +215,10 @@ export default function AdminCareer() {
                 return (
                   <div key={entry.id} className="flex items-start gap-3 p-3 border rounded-lg bg-background">
                     <div className="flex flex-col gap-1">
-                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={async () => {
-                        if (entryIndex === 0) return;
-                        const newEntries = [...section.entries];
-                        [newEntries[entryIndex - 1], newEntries[entryIndex]] = [newEntries[entryIndex], newEntries[entryIndex - 1]];
-                        setSections((prev) => prev.map((s) => s.id === section.id ? { ...s, entries: newEntries } : s));
-                        await Promise.all([
-                          adminUpdateEntry(newEntries[entryIndex - 1].id, { display_order: entryIndex - 1 }, getToken),
-                          adminUpdateEntry(newEntries[entryIndex].id, { display_order: entryIndex }, getToken),
-                        ]);
-                      }} disabled={entryIndex === 0}>
+                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => applyEntryOrder(section.id, swapped(section.entries, entryIndex - 1, entryIndex))} disabled={entryIndex === 0}>
                         <ChevronUp className="w-3 h-3" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={async () => {
-                        if (entryIndex === section.entries.length - 1) return;
-                        const newEntries = [...section.entries];
-                        [newEntries[entryIndex], newEntries[entryIndex + 1]] = [newEntries[entryIndex + 1], newEntries[entryIndex]];
-                        setSections((prev) => prev.map((s) => s.id === section.id ? { ...s, entries: newEntries } : s));
-                        await Promise.all([
-                          adminUpdateEntry(newEntries[entryIndex].id, { display_order: entryIndex }, getToken),
-                          adminUpdateEntry(newEntries[entryIndex + 1].id, { display_order: entryIndex + 1 }, getToken),
-                        ]);
-                      }} disabled={entryIndex === section.entries.length - 1}>
+                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => applyEntryOrder(section.id, swapped(section.entries, entryIndex, entryIndex + 1))} disabled={entryIndex === section.entries.length - 1}>
                         <ChevronDown className="w-3 h-3" />
                       </Button>
                     </div>

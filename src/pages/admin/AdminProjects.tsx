@@ -13,6 +13,7 @@ import {
   adminDeleteProject,
 } from "@/lib/api";
 import type { Project } from "@/lib/api";
+import { persistOrder, swapped } from "@/lib/reorder";
 
 type ProjectForm = {
   title: string;
@@ -165,7 +166,7 @@ export default function AdminProjects() {
       setProjects((prev) => prev.map((p) => (p.id === editingId ? updated : p)));
     } else {
       const created = await adminCreateProject(data, getToken);
-      setProjects((prev) => [created, ...prev]);
+      await applyOrder([created, ...projects]);
     }
     cancelEdit();
   };
@@ -176,26 +177,20 @@ export default function AdminProjects() {
     setProjects((prev) => prev.filter((p) => p.id !== id));
   };
 
+  // Show the new order immediately, then persist it as 0..n-1 for the whole list
+  const applyOrder = async (list: Project[]) => {
+    setProjects(list);
+    setProjects(await persistOrder(list, (id, display_order) => adminUpdateProject(id, { display_order }, getToken)));
+  };
+
   const moveUp = async (index: number) => {
     if (index === 0) return;
-    const newList = [...projects];
-    [newList[index - 1], newList[index]] = [newList[index], newList[index - 1]];
-    setProjects(newList);
-    await Promise.all([
-      adminUpdateProject(newList[index - 1].id, { display_order: index - 1 }, getToken),
-      adminUpdateProject(newList[index].id, { display_order: index }, getToken),
-    ]);
+    await applyOrder(swapped(projects, index - 1, index));
   };
 
   const moveDown = async (index: number) => {
     if (index === projects.length - 1) return;
-    const newList = [...projects];
-    [newList[index], newList[index + 1]] = [newList[index + 1], newList[index]];
-    setProjects(newList);
-    await Promise.all([
-      adminUpdateProject(newList[index].id, { display_order: index }, getToken),
-      adminUpdateProject(newList[index + 1].id, { display_order: index + 1 }, getToken),
-    ]);
+    await applyOrder(swapped(projects, index, index + 1));
   };
 
   const toggleVisible = async (project: Project) => {
