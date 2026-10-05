@@ -31,7 +31,7 @@ export default function BroadcastsSection({ projects }: Props) {
                 key={project.id}
                 type="button"
                 onClick={() => setSelected({ project, code })}
-                className="group grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-6 py-8 border-t border-tx-line last:border-b text-left items-start cursor-pointer transition-colors hover:bg-white/[0.03] focus-visible:outline-2 focus-visible:outline-tx-signal"
+                className="group grid grid-cols-1 lg:grid-cols-4 gap-3 lg:gap-6 py-8 border-t border-tx-line last:border-b text-left items-start cursor-pointer transition-colors hover:bg-white/[0.03] focus-visible:outline-2 focus-visible:outline-tx-signal"
               >
                 <span className="text-tx-rule uppercase">
                   {code}
@@ -46,7 +46,7 @@ export default function BroadcastsSection({ projects }: Props) {
                   {project.title}
                 </span>
                 <span className="leading-[1.6] text-tx-dim">{project.short_description}</span>
-                <span className="md:justify-self-end text-tx-signal font-bold">
+                <span className="lg:justify-self-end text-tx-signal font-bold">
                   TUNE IN <span className="inline-block transition-transform group-hover:translate-x-1">▸</span>
                 </span>
               </button>

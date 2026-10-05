@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type { Intro } from "@/lib/api";
+import SocialIcon from "@/components/SocialIcon";
+import type { Intro, SocialLink } from "@/lib/api";
 import { WRAP, LABEL, stationOf } from "@/lib/station";
 
 type NavLink = { id: string; label: string };
@@ -8,9 +9,10 @@ type Props = {
   links: NavLink[];
   /** null while loading — the label stays empty instead of flashing the default */
   intro: Intro | null | undefined;
+  socials: SocialLink[];
 };
 
-export default function SiteHeader({ links, intro }: Props) {
+export default function SiteHeader({ links, intro, socials }: Props) {
   const [open, setOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -131,9 +133,27 @@ export default function SiteHeader({ links, intro }: Props) {
           ))}
         </nav>
 
-        <span className="mt-auto text-tx-rule">
-          <span className="text-tx-signal motion-safe:animate-tx-blink">●</span> STAY TUNED
-        </span>
+        <div className="mt-auto flex flex-col gap-5">
+          {socials.length > 0 && (
+            <div className="flex flex-wrap gap-x-6 gap-y-3">
+              {socials.map((social) => (
+                <a
+                  key={social.id}
+                  href={social.url ?? "#"}
+                  target={social.url?.startsWith("mailto:") ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-tx-paper uppercase no-underline hover:text-tx-signal"
+                >
+                  <SocialIcon social={social} className="w-4 h-4" />
+                  {social.label ?? social.platform}
+                </a>
+              ))}
+            </div>
+          )}
+          <span className="text-tx-rule">
+            <span className="text-tx-signal motion-safe:animate-tx-blink">●</span> STAY TUNED
+          </span>
+        </div>
       </div>
     </header>
   );

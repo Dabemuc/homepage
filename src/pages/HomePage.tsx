@@ -5,6 +5,7 @@ import LogSection from "@/components/sections/LogSection";
 import OperatorSection from "@/components/sections/OperatorSection";
 import RespondFooter from "@/components/sections/RespondFooter";
 import SiteHeader from "@/components/SiteHeader";
+import SocialRail from "@/components/SocialRail";
 import { fetchHomepage } from "@/lib/api";
 import type { HomepageData } from "@/lib/api";
 import { WRAP, LABEL } from "@/lib/station";
@@ -45,7 +46,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-tx-paper text-tx-ink font-station text-[13px] overflow-x-hidden">
-      <SiteHeader links={navLinks} intro={data ? data.intro : loading ? undefined : null} />
+      <SiteHeader links={navLinks} intro={data ? data.intro : loading ? undefined : null} socials={data?.socials ?? []} />
+      <SocialRail socials={data?.socials ?? []} />
 
       <Hero intro={intro} />
 
