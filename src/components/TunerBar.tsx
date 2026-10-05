@@ -56,7 +56,7 @@ export default function TunerBar({ links, stationName }: Props) {
       }`}
     >
       <div className={`${WRAP} h-14 flex items-center gap-8`}>
-        <span className={`${LABEL} w-36 shrink-0 text-tx-rule uppercase truncate`}>{stationName}</span>
+        <span className={`${LABEL} shrink-0 max-w-[30%] text-tx-rule uppercase truncate`}>{stationName}</span>
 
         <nav aria-label="Stations" className="relative flex-1 h-full">
           {/* Scale */}
@@ -86,7 +86,7 @@ export default function TunerBar({ links, stationName }: Props) {
           />
         </nav>
 
-        <span className={`${LABEL} w-36 shrink-0 text-right text-tx-rule`}>
+        <span className={`${LABEL} shrink-0 min-w-36 text-right text-tx-rule whitespace-nowrap`}>
           TUNED: <span className="text-tx-paper">{links[active]?.label}</span>
         </span>
       </div>

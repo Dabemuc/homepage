@@ -121,7 +121,7 @@ export default function SiteHeader({ links, intro, socials }: Props) {
             ref={closeRef}
             type="button"
             onClick={() => setOpen(false)}
-            className="-m-2 p-2 cursor-pointer hover:text-tx-signal"
+            className="-m-2 p-2 shrink-0 whitespace-nowrap cursor-pointer hover:text-tx-signal"
           >
             CLOSE ✕
           </button>
