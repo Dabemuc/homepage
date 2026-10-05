@@ -1,31 +1,15 @@
-import { useEffect, useState } from "react";
-import { Settings } from "lucide-react";
-import * as Icons from "lucide-react";
-import { Link } from "react-router-dom";
-import IntroSection from "@/components/sections/IntroSection";
-import ProjectsSection from "@/components/sections/ProjectsSection";
-import CareerSection from "@/components/sections/CareerSection";
+import { useEffect, useMemo, useState } from "react";
+import Hero from "@/components/sections/Hero";
+import BroadcastsSection from "@/components/sections/BroadcastsSection";
+import LogSection from "@/components/sections/LogSection";
+import OperatorSection from "@/components/sections/OperatorSection";
+import RespondFooter from "@/components/sections/RespondFooter";
+import SiteHeader from "@/components/SiteHeader";
+import SocialRail from "@/components/SocialRail";
+import TunerBar from "@/components/TunerBar";
 import { fetchHomepage } from "@/lib/api";
-import type { HomepageData, SocialLink } from "@/lib/api";
-
-function SocialIcon({ social }: { social: SocialLink }) {
-  const IconComponent = social.icon
-    ? (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[social.icon]
-    : null;
-  if (!IconComponent) return null;
-  return (
-    <a
-      href={social.url ?? "#"}
-      target={social.url?.startsWith("mailto:") ? undefined : "_blank"}
-      rel="noopener noreferrer"
-      aria-label={social.label ?? social.platform ?? ""}
-      title={social.label ?? social.platform ?? ""}
-      className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
-    >
-      <IconComponent className="h-4 w-4" />
-    </a>
-  );
-}
+import type { HomepageData } from "@/lib/api";
+import { WRAP, LABEL, parseBuildLog, parseHeadline, stationOf } from "@/lib/station";
 
 export default function HomePage() {
   const [data, setData] = useState<HomepageData | null>(null);
@@ -38,83 +22,70 @@ export default function HomePage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const visibleSocials = data?.socials.filter((s) => s.visible !== false) ?? [];
+  // The admin UI is dark; match the page canvas (overscroll areas) to this light design while mounted
+  useEffect(() => {
+    const root = document.documentElement;
+    const prev = root.style.backgroundColor;
+    root.style.backgroundColor = "var(--color-tx-paper)";
+    return () => {
+      root.style.backgroundColor = prev;
+    };
+  }, []);
+
+  const introVisible = data?.config.intro_visible !== "false";
+  const intro = introVisible ? data?.intro ?? null : null;
+  const showBroadcasts = !!data && data.config.projects_visible !== "false" && data.projects.length > 0;
+  const showLog = !!data && data.config.career_visible !== "false" && data.career.length > 0;
+  const showOperator = !!data && introVisible;
+
+  const navLinks = useMemo(
+    () =>
+      [
+        { id: "operator", label: "OPERATOR", show: showOperator },
+        { id: "broadcasts", label: "BROADCASTS", show: showBroadcasts },
+        { id: "log", label: "LOG", show: showLog },
+        { id: "respond", label: "RESPOND", show: true },
+      ].filter((l) => l.show),
+    [showOperator, showBroadcasts, showLog]
+  );
+  const station = stationOf(data?.intro ?? null);
+  // The build animation starts once the admin's log is known (or loading failed and defaults are used)
+  const buildLog = useMemo(
+    () => (data ? parseBuildLog(data.intro?.build_log) : error ? parseBuildLog(null) : null),
+    [data, error]
+  );
+  const headline = data ? parseHeadline(data.intro?.headline) : error ? parseHeadline(null) : null;
 
   return (
-    <div className="min-h-screen bg-background relative overflow-x-hidden">
-      {/* Subtle background glow */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0"
-        aria-hidden
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 45% at 50% -5%, var(--brand-glow), transparent 70%)",
-        }}
-      />
+    <div className="min-h-screen bg-tx-paper text-tx-ink font-station text-[13px] overflow-x-clip">
+      <SiteHeader links={navLinks} intro={data ? data.intro : loading ? undefined : null} socials={data?.socials ?? []} />
+      <SocialRail socials={data?.socials ?? []} />
+      {data && <TunerBar links={navLinks} stationName={station.name} />}
 
-      {/* Top bar */}
-      <header className="fixed top-0 inset-x-0 z-40 p-3 flex items-center justify-between bg-background/40 backdrop-blur-md border-b border-border/40">
-        {/* Socials — left side */}
-        <div className="flex gap-1">
-          {visibleSocials.map((social) => (
-            <SocialIcon key={social.id} social={social} />
-          ))}
-        </div>
-
-        {/* Controls — right side */}
-        <div className="flex gap-1.5">
-          <Link
-            to="/admin"
-            aria-label="Admin"
-            className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
-          >
-            <Settings className="h-4 w-4" />
-          </Link>
-        </div>
-      </header>
+      <Hero intro={intro} station={station} links={data ? navLinks : []} buildLog={buildLog} headline={headline} />
 
       {loading && (
-        <div className="relative z-10 flex items-center justify-center min-h-screen">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-6 h-6 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
-            <span className="text-sm text-muted-foreground">Loading...</span>
-          </div>
+        <div className={`${WRAP} ${LABEL} pb-24 text-tx-muted`}>
+          <span className="motion-safe:animate-tx-blink">●</span> TUNING IN…
         </div>
       )}
 
       {error && (
-        <div className="relative z-10 flex items-center justify-center min-h-screen">
-          <div className="text-destructive text-center">
-            <p className="font-semibold">Failed to load</p>
-            <p className="text-sm mt-1 text-muted-foreground">{error}</p>
-          </div>
+        <div className={`${WRAP} pb-24 flex flex-col gap-2`}>
+          <span className={`${LABEL} text-tx-signal font-bold`}>● NO SIGNAL</span>
+          <span className="text-tx-muted">{error}</span>
         </div>
       )}
 
       {data && (
-        <div className="relative z-10">
-          {data.config.intro_visible !== "false" && data.intro && (
-            <IntroSection intro={data.intro} />
-          )}
-
-          {data.config.projects_visible !== "false" && data.projects.length > 0 && (
-            <div className="border-t border-border/60">
-              <ProjectsSection projects={data.projects} />
-            </div>
-          )}
-
-          {data.config.career_visible !== "false" && data.career.length > 0 && (
-            <div className="border-t border-border/60">
-              <CareerSection sections={data.career} />
-            </div>
-          )}
-        </div>
+        <>
+          {showOperator && <OperatorSection intro={intro} skills={data.skills ?? []} />}
+          {showBroadcasts && <BroadcastsSection projects={data.projects} />}
+          {showLog && <LogSection sections={data.career} />}
+        </>
       )}
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-border/60 py-8 text-center text-sm text-muted-foreground/60">
-        © {new Date().getFullYear()}, Dabemuc
-      </footer>
+      <RespondFooter socials={data?.socials ?? []} name={data?.intro?.name ?? null} />
     </div>
   );
 }

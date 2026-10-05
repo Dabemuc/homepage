@@ -1,0 +1,1 @@
+ALTER TABLE `intro` ADD `headline` text;

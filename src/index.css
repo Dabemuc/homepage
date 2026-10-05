@@ -2,10 +2,48 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource/barlow-condensed/300.css";
+@import "@fontsource/barlow-condensed/500.css";
+@import "@fontsource/barlow-condensed/800.css";
+@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
 
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
+
+/* "Last Transmission" palette for the public homepage (fixed light, independent of the admin theme) */
+@theme {
+  --color-tx-ink: #0E0F10;
+  --color-tx-paper: #EDEEEA;
+  --color-tx-haze: #DCDEDA;
+  --color-tx-rule: #9EA19C;
+  --color-tx-line: #3A3C3E;
+  --color-tx-muted: #4E514D;
+  --color-tx-dim: #C9CBC6;
+  --color-tx-card: #F4F4F1;
+  --color-tx-signal: #B3241B;
+  --font-display: "Barlow Condensed", sans-serif;
+  --font-station: "Space Mono", monospace;
+  --animate-tx-blink: tx-blink 2.4s steps(1, end) infinite;
+
+  @keyframes tx-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.15; }
+  }
+
+  --animate-tx-sway: tx-sway 3.2s ease-in-out infinite alternate;
+  @keyframes tx-sway {
+    from { transform: rotate(-2.5deg); }
+    to { transform: rotate(2.5deg); }
+  }
+
+  --animate-tx-ring: tx-ring 2.4s ease-out infinite;
+  @keyframes tx-ring {
+    from { transform: scale(0.2); opacity: 0.9; }
+    to { transform: scale(1); opacity: 0; }
+  }
+}
 
 :root {
   --background: oklch(1 0 0);
@@ -144,6 +182,11 @@
   }
   html {
     @apply font-sans;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 }
 

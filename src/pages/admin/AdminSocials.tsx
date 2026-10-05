@@ -12,6 +12,7 @@ import {
   adminDeleteSocial,
 } from "@/lib/api";
 import type { SocialLink } from "@/lib/api";
+import { SUPPORTED_SOCIAL_ICONS } from "@/components/SocialIcon";
 
 type SocialForm = {
   platform: string;
@@ -54,9 +55,11 @@ function SocialFormFields({
         <Input value={form.url} onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://github.com/..." />
       </div>
       <div>
-        <label className="text-sm font-medium mb-1 block">Lucide Icon Name</label>
+        <label className="text-sm font-medium mb-1 block">Icon</label>
         <Input value={form.icon} onChange={(e) => setForm((f) => ({ ...f, icon: e.target.value }))} placeholder="Github, Linkedin, Mail, Twitter..." />
-        <p className="text-xs text-muted-foreground mt-1">Use a PascalCase lucide-react icon name</p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Supported: {SUPPORTED_SOCIAL_ICONS.join(", ")}. Anything else shows the label's first two letters.
+        </p>
       </div>
       <div className="flex items-center gap-2">
         <Switch checked={form.visible} onCheckedChange={(v) => setForm((f) => ({ ...f, visible: v }))} />

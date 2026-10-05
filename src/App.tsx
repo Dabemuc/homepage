@@ -8,6 +8,7 @@ import AdminIntro from "./pages/admin/AdminIntro";
 import AdminProjects from "./pages/admin/AdminProjects";
 import AdminCareer from "./pages/admin/AdminCareer";
 import AdminSocials from "./pages/admin/AdminSocials";
+import AdminSkills from "./pages/admin/AdminSkills";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 
@@ -54,6 +55,7 @@ export default function App() {
             <Route path="intro" element={<AdminIntro />} />
             <Route path="projects" element={<AdminProjects />} />
             <Route path="career" element={<AdminCareer />} />
+            <Route path="skills" element={<AdminSkills />} />
             <Route path="socials" element={<AdminSocials />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

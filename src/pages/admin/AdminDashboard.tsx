@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, FolderOpen, Briefcase, Share2 } from "lucide-react";
+import { User, FolderOpen, Briefcase, ListChecks, Share2 } from "lucide-react";
 
 const sections = [
   {
     to: "/admin/intro",
     title: "Intro",
-    description: "Edit your name, tagline, bio, and avatar",
+    description: "Edit your callsign, tagline, bio, and on-air date",
     icon: User,
   },
   {
@@ -18,13 +18,19 @@ const sections = [
   {
     to: "/admin/career",
     title: "Career",
-    description: "Edit your career timeline sections and entries",
+    description: "Edit your station log sessions and entries",
     icon: Briefcase,
+  },
+  {
+    to: "/admin/skills",
+    title: "Skills",
+    description: "Edit the skills grid in the operator profile",
+    icon: ListChecks,
   },
   {
     to: "/admin/socials",
     title: "Socials",
-    description: "Manage social links shown in the panel",
+    description: "Manage social links shown in the footer",
     icon: Share2,
   },
 ];
