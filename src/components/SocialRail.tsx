@@ -8,7 +8,7 @@ type Props = {
 };
 
 /**
- * Desktop-only social strip in the left page gutter. Uses difference blending so it stays legible over
+ * Desktop-only social strip in the right page gutter. Uses difference blending so it stays legible over
  * the light and dark sections, and fades out once the Respond footer (which lists the socials) is in view.
  */
 export default function SocialRail({ socials }: Props) {
@@ -28,7 +28,7 @@ export default function SocialRail({ socials }: Props) {
     <nav
       aria-label="Social links"
       inert={footerVisible}
-      className={`hidden md:flex fixed left-3 bottom-0 z-30 w-4 flex-col items-center gap-5 text-white mix-blend-difference transition-opacity duration-300 ${
+      className={`hidden md:flex fixed right-3 bottom-0 z-30 w-4 flex-col items-center gap-5 text-white mix-blend-difference transition-opacity duration-300 ${
         footerVisible ? "opacity-0" : "opacity-100"
       }`}
     >

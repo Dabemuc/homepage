@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import QslCard from "./QslCard";
 import type { Intro, Skill } from "@/lib/api";
-import { WRAP, LABEL } from "@/lib/station";
+import { SECTION_WRAP, LABEL } from "@/lib/station";
 
 type Props = {
   intro: Intro | null;
@@ -11,7 +11,7 @@ type Props = {
 export default function OperatorSection({ intro, skills }: Props) {
   return (
     <section id="operator" className="bg-tx-haze">
-      <div className={`${WRAP} py-20 md:py-[110px] grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-[72px] items-center`}>
+      <div className={`${SECTION_WRAP} py-20 md:py-[110px] grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-[72px] items-center`}>
         <div className="px-2 sm:px-4">
           <QslCard intro={intro} />
         </div>

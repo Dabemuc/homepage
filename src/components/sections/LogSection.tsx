@@ -1,6 +1,6 @@
 import Markdown from "@/components/Markdown";
 import type { CareerSection } from "@/lib/api";
-import { WRAP, LABEL } from "@/lib/station";
+import { SECTION_WRAP, LABEL } from "@/lib/station";
 
 type Props = {
   sections: CareerSection[];
@@ -15,7 +15,7 @@ export default function LogSection({ sections }: Props) {
 
   return (
     <section id="log" className="py-20 md:py-[110px]">
-      <div className={`${WRAP} flex flex-col gap-14`}>
+      <div className={`${SECTION_WRAP} flex flex-col gap-14`}>
         <div className="flex flex-wrap justify-between items-baseline gap-4">
           <h2 className="m-0 font-display font-medium text-5xl md:text-[64px] leading-none uppercase">Station log</h2>
           <span className={`${LABEL} text-tx-muted`}>

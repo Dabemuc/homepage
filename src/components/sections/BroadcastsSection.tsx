@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ProjectModal from "./ProjectModal";
 import type { Project } from "@/lib/api";
-import { WRAP, LABEL, txCode, parseTags } from "@/lib/station";
+import { SECTION_WRAP, LABEL, txCode, parseTags } from "@/lib/station";
 
 type Props = {
   projects: Project[];
@@ -14,7 +14,7 @@ export default function BroadcastsSection({ projects }: Props) {
 
   return (
     <section id="broadcasts" className="bg-tx-ink text-tx-paper py-20 md:py-[110px]">
-      <div className={`${WRAP} flex flex-col gap-12`}>
+      <div className={`${SECTION_WRAP} flex flex-col gap-12`}>
         <div className="flex flex-wrap justify-between items-baseline gap-4">
           <h2 className="m-0 font-display font-medium text-5xl md:text-[64px] leading-none uppercase">Broadcasts</h2>
           <span className={`${LABEL} text-tx-rule`}>

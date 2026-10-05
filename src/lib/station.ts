@@ -19,6 +19,8 @@ export function stationOf(intro: Intro | null) {
 
 // Shared layout/typography classes
 export const WRAP = "mx-auto w-full max-w-[1360px] px-4 md:px-10";
+/** Roomier wrapper for the content sections (operator, broadcasts, log) */
+export const SECTION_WRAP = "mx-auto w-full max-w-[1360px] px-6 md:px-16 xl:px-24";
 export const LABEL = "text-[11px] tracking-[0.12em]";
 
 /** "TX-004" style code for a project, counting up from the oldest (last) entry. */
