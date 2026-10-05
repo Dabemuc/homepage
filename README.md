@@ -16,10 +16,10 @@ A personal portfolio homepage with a fully configurable admin UI, hosted on Clou
 
 - Public homepage in the "Last Transmission" design (radio-station theme, fixed light palette):
   - **Hero** — station illustration, headline, tagline and a `LIVE — DAY n` counter (days since the intro's *On air since* date)
-  - **Broadcasts** — projects as `TX-00n` rows; clicking one opens a detail modal with screenshot, links and Markdown description
-  - **Station log** — career sections as logbook sessions (the one marked *On air* is highlighted as the current position)
   - **Operator profile** — a QSL card "issued" to each visitor, the bio, and a two-column skills grid
     - The card carries a visitor number (`QSL NO. 000042`): on a browser's first visit the page calls `POST /api/public/visit`, which increments `site_config.visitor_count` atomically (obvious bots are skipped by user agent); the number is then kept in `localStorage` so returning visitors keep theirs
+  - **Broadcasts** — projects as `TX-00n` rows; clicking one opens a detail modal with screenshot, links and Markdown description
+  - **Station log** — career sections as logbook sessions (the one marked *On air* is highlighted as the current position)
   - **Respond** — footer with the `mailto:` social as the main call to action plus the other social links
 - Admin UI for all content (intro, projects, career, skills, socials)
 - Clerk-protected admin routes
@@ -140,7 +140,7 @@ npm run cf-typegen
 │   └── screenshots/          # Project screenshots
 ├── src/
 │   ├── components/
-│   │   ├── sections/         # HomePage sections (Hero, Broadcasts, Log, Operator, Respond)
+│   │   ├── sections/         # HomePage sections (Hero, Operator, Broadcasts, Log, Respond)
 │   │   ├── ui/               # shadcn/ui components
 │   │   └── Markdown.tsx      # Markdown renderer styled for the homepage
 │   ├── pages/

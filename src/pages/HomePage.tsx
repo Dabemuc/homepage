@@ -36,9 +36,9 @@ export default function HomePage() {
   const showOperator = !!data && introVisible;
 
   const navLinks = [
+    { id: "operator", label: "OPERATOR", show: showOperator },
     { id: "broadcasts", label: "BROADCASTS", show: showBroadcasts },
     { id: "log", label: "LOG", show: showLog },
-    { id: "operator", label: "OPERATOR", show: showOperator },
     { id: "respond", label: "RESPOND", show: true },
   ].filter((l) => l.show);
 
@@ -74,9 +74,9 @@ export default function HomePage() {
 
       {data && (
         <>
+          {showOperator && <OperatorSection intro={intro} skills={data.skills ?? []} />}
           {showBroadcasts && <BroadcastsSection projects={data.projects} />}
           {showLog && <LogSection sections={data.career} />}
-          {showOperator && <OperatorSection intro={intro} skills={data.skills ?? []} />}
         </>
       )}
 
