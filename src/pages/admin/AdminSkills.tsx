@@ -12,6 +12,7 @@ import {
   adminDeleteSkill,
 } from "@/lib/api";
 import type { Skill } from "@/lib/api";
+import { persistOrder, swapped } from "@/lib/reorder";
 
 type SkillForm = {
   label: string;
@@ -78,7 +79,7 @@ export default function AdminSkills() {
       setSkills((prev) => prev.map((s) => (s.id === editingId ? updated : s)));
     } else {
       const created = await adminCreateSkill({ ...form, display_order: skills.length }, getToken);
-      setSkills((prev) => [...prev, created]);
+      await applyOrder([...skills, created]);
     }
     setEditingId(null);
     setShowNew(false);
@@ -91,15 +92,13 @@ export default function AdminSkills() {
     setSkills((prev) => prev.filter((s) => s.id !== id));
   };
 
-  const swap = async (a: number, b: number) => {
-    const newList = [...skills];
-    [newList[a], newList[b]] = [newList[b], newList[a]];
-    setSkills(newList);
-    await Promise.all([
-      adminUpdateSkill(newList[a].id, { display_order: a }, getToken),
-      adminUpdateSkill(newList[b].id, { display_order: b }, getToken),
-    ]);
+  // Show the new order immediately, then persist it as 0..n-1 for the whole list
+  const applyOrder = async (list: Skill[]) => {
+    setSkills(list);
+    setSkills(await persistOrder(list, (id, display_order) => adminUpdateSkill(id, { display_order }, getToken)));
   };
+
+  const swap = (a: number, b: number) => applyOrder(swapped(skills, a, b));
 
   const toggleVisible = async (skill: Skill) => {
     const updated = await adminUpdateSkill(skill.id, { visible: !skill.visible }, getToken);

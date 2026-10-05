@@ -65,11 +65,11 @@ export default {
         const [config, introRows, projectRows, sectionRows, entryRows, socialRows, skillRows] = await Promise.all([
           db.select().from(schema.siteConfig),
           db.select().from(schema.intro),
-          db.select().from(schema.projects).where(eq(schema.projects.visible, true)).orderBy(schema.projects.display_order),
-          db.select().from(schema.careerSections).where(eq(schema.careerSections.visible, true)).orderBy(schema.careerSections.display_order),
-          db.select().from(schema.careerEntries).orderBy(schema.careerEntries.display_order),
-          db.select().from(schema.socialLinks).where(eq(schema.socialLinks.visible, true)).orderBy(schema.socialLinks.display_order),
-          db.select().from(schema.skills).where(eq(schema.skills.visible, true)).orderBy(schema.skills.display_order),
+          db.select().from(schema.projects).where(eq(schema.projects.visible, true)).orderBy(schema.projects.display_order, schema.projects.id),
+          db.select().from(schema.careerSections).where(eq(schema.careerSections.visible, true)).orderBy(schema.careerSections.display_order, schema.careerSections.id),
+          db.select().from(schema.careerEntries).orderBy(schema.careerEntries.display_order, schema.careerEntries.id),
+          db.select().from(schema.socialLinks).where(eq(schema.socialLinks.visible, true)).orderBy(schema.socialLinks.display_order, schema.socialLinks.id),
+          db.select().from(schema.skills).where(eq(schema.skills.visible, true)).orderBy(schema.skills.display_order, schema.skills.id),
         ]);
 
         const configMap = Object.fromEntries(config.map((c) => [c.key, c.value]));
@@ -120,7 +120,7 @@ export default {
         visible?: boolean;
       };
       if (method === "GET") {
-        const rows = await db.select().from(schema.projects).orderBy(schema.projects.display_order);
+        const rows = await db.select().from(schema.projects).orderBy(schema.projects.display_order, schema.projects.id);
         return Response.json({ success: true, data: rows });
       }
       if (method === "POST") {
@@ -150,8 +150,8 @@ export default {
 
       if (method === "GET") {
         const [sections, entries] = await Promise.all([
-          db.select().from(schema.careerSections).orderBy(schema.careerSections.display_order),
-          db.select().from(schema.careerEntries).orderBy(schema.careerEntries.display_order),
+          db.select().from(schema.careerSections).orderBy(schema.careerSections.display_order, schema.careerSections.id),
+          db.select().from(schema.careerEntries).orderBy(schema.careerEntries.display_order, schema.careerEntries.id),
         ]);
         const data = sections.map((section) => ({
           ...section,
@@ -212,7 +212,7 @@ export default {
       };
 
       if (method === "GET") {
-        const rows = await db.select().from(schema.socialLinks).orderBy(schema.socialLinks.display_order);
+        const rows = await db.select().from(schema.socialLinks).orderBy(schema.socialLinks.display_order, schema.socialLinks.id);
         return Response.json({ success: true, data: rows });
       }
       if (method === "POST") {
@@ -248,7 +248,7 @@ export default {
       };
 
       if (method === "GET") {
-        const rows = await db.select().from(schema.skills).orderBy(schema.skills.display_order);
+        const rows = await db.select().from(schema.skills).orderBy(schema.skills.display_order, schema.skills.id);
         return Response.json({ success: true, data: rows });
       }
       if (method === "POST") {

@@ -12,6 +12,7 @@ import {
   adminDeleteSocial,
 } from "@/lib/api";
 import type { SocialLink } from "@/lib/api";
+import { persistOrder, swapped } from "@/lib/reorder";
 import { SUPPORTED_SOCIAL_ICONS } from "@/components/SocialIcon";
 
 type SocialForm = {
@@ -88,13 +89,13 @@ export default function AdminSocials() {
   }, []);
 
   const save = async () => {
-    const data = { ...form, display_order: editingId !== null ? undefined : socials.length + 1 };
+    const data = { ...form, display_order: editingId !== null ? undefined : socials.length };
     if (editingId !== null) {
       const updated = await adminUpdateSocial(editingId, data, getToken);
       setSocials((prev) => prev.map((s) => (s.id === editingId ? updated : s)));
     } else {
       const created = await adminCreateSocial(data, getToken);
-      setSocials((prev) => [...prev, created]);
+      await applyOrder([...socials, created]);
     }
     setEditingId(null);
     setShowNew(false);
@@ -107,26 +108,20 @@ export default function AdminSocials() {
     setSocials((prev) => prev.filter((s) => s.id !== id));
   };
 
+  // Show the new order immediately, then persist it as 0..n-1 for the whole list
+  const applyOrder = async (list: SocialLink[]) => {
+    setSocials(list);
+    setSocials(await persistOrder(list, (id, display_order) => adminUpdateSocial(id, { display_order }, getToken)));
+  };
+
   const moveUp = async (index: number) => {
     if (index === 0) return;
-    const newList = [...socials];
-    [newList[index - 1], newList[index]] = [newList[index], newList[index - 1]];
-    setSocials(newList);
-    await Promise.all([
-      adminUpdateSocial(newList[index - 1].id, { display_order: index - 1 }, getToken),
-      adminUpdateSocial(newList[index].id, { display_order: index }, getToken),
-    ]);
+    await applyOrder(swapped(socials, index - 1, index));
   };
 
   const moveDown = async (index: number) => {
     if (index === socials.length - 1) return;
-    const newList = [...socials];
-    [newList[index], newList[index + 1]] = [newList[index + 1], newList[index]];
-    setSocials(newList);
-    await Promise.all([
-      adminUpdateSocial(newList[index].id, { display_order: index }, getToken),
-      adminUpdateSocial(newList[index + 1].id, { display_order: index + 1 }, getToken),
-    ]);
+    await applyOrder(swapped(socials, index, index + 1));
   };
 
   const toggleVisible = async (social: SocialLink) => {
