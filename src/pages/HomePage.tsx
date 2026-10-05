@@ -45,7 +45,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-tx-paper text-tx-ink font-station text-[13px] overflow-x-hidden">
-      <SiteHeader links={navLinks} />
+      <SiteHeader links={navLinks} intro={data ? data.intro : loading ? undefined : null} />
 
       <Hero intro={intro} />
 

@@ -1,4 +1,6 @@
-// Fixed copy for the "Last Transmission" homepage design.
+import type { Intro } from "@/lib/api";
+
+// Fixed copy for the "Last Transmission" homepage design (name/frequency are defaults, editable on the admin Intro page).
 export const STATION = {
   name: "Station D",
   frequency: "147.300",
@@ -6,6 +8,14 @@ export const STATION = {
   operator: "Daniel",
   headline: ["This station", "is still building"],
 };
+
+/** Station name + frequency from the intro, falling back to the defaults above. */
+export function stationOf(intro: Intro | null) {
+  return {
+    name: intro?.station_name?.trim() || STATION.name,
+    frequency: intro?.station_frequency?.trim() || STATION.frequency,
+  };
+}
 
 // Shared layout/typography classes
 export const WRAP = "mx-auto w-full max-w-[1360px] px-4 md:px-10";

@@ -2,6 +2,16 @@ import { Link } from "react-router-dom";
 import type { SocialLink } from "@/lib/api";
 import { WRAP, LABEL } from "@/lib/station";
 
+/** "mailto:hi@x.de?subject=…" → "hi@x.de" */
+function mailAddress(url: string): string {
+  const address = url.replace(/^mailto:/i, "").split("?")[0];
+  try {
+    return decodeURIComponent(address);
+  } catch {
+    return address;
+  }
+}
+
 type Props = {
   socials: SocialLink[];
   name: string | null;
@@ -20,9 +30,14 @@ export default function RespondFooter({ socials, name }: Props) {
           <div className="flex flex-col gap-2.5">
             <span className={LABEL}>IF YOU CAN HEAR THIS —</span>
             {mail?.url ? (
-              <a href={mail.url} className={`${respondClass} hover:text-tx-ink transition-colors`}>
-                Respond
-              </a>
+              <>
+                <a href={mail.url} className={`${respondClass} hover:text-tx-ink transition-colors`}>
+                  Respond
+                </a>
+                <a href={mail.url} className="text-sm text-tx-card underline underline-offset-4 hover:text-tx-ink break-all">
+                  → {mailAddress(mail.url)}
+                </a>
+              </>
             ) : (
               <span className={respondClass}>Respond</span>
             )}

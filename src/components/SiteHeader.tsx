@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { STATION, WRAP, LABEL } from "@/lib/station";
+import type { Intro } from "@/lib/api";
+import { WRAP, LABEL, stationOf } from "@/lib/station";
 
 type NavLink = { id: string; label: string };
 
 type Props = {
   links: NavLink[];
+  /** null while loading — the label stays empty instead of flashing the default */
+  intro: Intro | null | undefined;
 };
 
-export default function SiteHeader({ links }: Props) {
+export default function SiteHeader({ links, intro }: Props) {
   const [open, setOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -45,7 +48,8 @@ export default function SiteHeader({ links }: Props) {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  const stationLabel = `${STATION.name} — ${STATION.frequency} MHZ`;
+  const station = stationOf(intro ?? null);
+  const stationLabel = intro === undefined ? "\u00a0" : `${station.name} — ${station.frequency} MHZ`;
 
   return (
     <header className={`${WRAP} ${LABEL} py-6 flex items-center justify-between gap-5`}>

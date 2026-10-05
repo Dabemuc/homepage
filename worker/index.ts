@@ -94,7 +94,7 @@ export default {
         return Response.json({ success: true, data: rows[0] ?? null });
       }
       if (method === "PUT") {
-        const body = await request.json() as { name?: string; tagline?: string; bio?: string; avatar_url?: string; on_air_since?: string };
+        const body = await request.json() as { name?: string; tagline?: string; bio?: string; avatar_url?: string; on_air_since?: string; station_name?: string; station_frequency?: string };
         const existing = await db.select().from(schema.intro).where(eq(schema.intro.id, 1));
         if (existing.length === 0) {
           await db.insert(schema.intro).values({ id: 1, ...body });

@@ -6,13 +6,15 @@ INSERT OR REPLACE INTO site_config (key, value) VALUES ('projects_visible', 'tru
 INSERT OR REPLACE INTO site_config (key, value) VALUES ('career_visible', 'true');
 
 -- Intro
-INSERT OR REPLACE INTO intro (id, name, tagline, bio, avatar_url, on_air_since) VALUES (
+INSERT OR REPLACE INTO intro (id, name, tagline, bio, avatar_url, on_air_since, station_name, station_frequency) VALUES (
   1,
   'Dabemuc',
   'Daniel. Developer, student, operator of small machines. Broadcasting work logs from Germany.',
   'I build fast, reliable software with a focus on clean architecture and developer experience. Passionate about Rust, TypeScript, and edge computing.',
   null,
-  '2019-01-01'
+  '2019-01-01',
+  'Station D',
+  '147.300'
 );
 
 -- Projects

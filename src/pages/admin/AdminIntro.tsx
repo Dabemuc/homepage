@@ -15,6 +15,8 @@ export default function AdminIntro() {
     tagline: "",
     bio: "",
     on_air_since: "",
+    station_name: "",
+    station_frequency: "",
   });
 
   useEffect(() => {
@@ -26,6 +28,8 @@ export default function AdminIntro() {
             tagline: data.tagline ?? "",
             bio: data.bio ?? "",
             on_air_since: data.on_air_since ?? "",
+            station_name: data.station_name ?? "",
+            station_frequency: data.station_frequency ?? "",
           });
         }
       })
@@ -77,6 +81,29 @@ export default function AdminIntro() {
             rows={5}
           />
           <p className="text-xs text-muted-foreground mt-1">Shown in the operator profile</p>
+        </div>
+        <div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Station name</label>
+              <Input
+                value={form.station_name}
+                onChange={(e) => setForm((f) => ({ ...f, station_name: e.target.value }))}
+                placeholder="Station D"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Frequency (MHz)</label>
+              <Input
+                value={form.station_frequency}
+                onChange={(e) => setForm((f) => ({ ...f, station_frequency: e.target.value }))}
+                placeholder="147.300"
+              />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Top bar shows "{form.station_name || "Station D"} — {form.station_frequency || "147.300"} MHz"; the frequency also appears on the QSL card
+          </p>
         </div>
         <div>
           <label className="text-sm font-medium mb-1 block">On air since</label>

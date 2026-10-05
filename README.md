@@ -15,13 +15,13 @@ A personal portfolio homepage with a fully configurable admin UI, hosted on Clou
 ## Features
 
 - Public homepage in the "Last Transmission" design (radio-station theme, fixed light palette):
-  - **Top bar** — station label + section nav; below `md` the nav collapses into a burger that slides in a sidebar
+  - **Top bar** — station label (`<Station name> — <Frequency> MHZ`, editable on the admin Intro page) + section nav; below `md` the nav collapses into a burger that slides in a sidebar
   - **Hero** — station illustration, headline, tagline and a `LIVE — DAY n` counter (days since the intro's *On air since* date)
   - **Operator profile** — a QSL card "issued" to each visitor, the bio, and a two-column skills grid
     - The card carries a visitor number (`QSL NO. 000042`): on a browser's first visit the page calls `POST /api/public/visit`, which increments `site_config.visitor_count` atomically (obvious bots are skipped by user agent); the number is then kept in `localStorage` so returning visitors keep theirs
   - **Broadcasts** — projects as `TX-00n` rows; clicking one opens a detail modal with screenshot, links and Markdown description
   - **Station log** — career sections as logbook sessions (the one marked *On air* is highlighted as the current position)
-  - **Respond** — footer with the `mailto:` social as the main call to action plus the other social links
+  - **Respond** — footer with the `mailto:` social as the main call to action (its address is shown below it) plus the other social links
 - Admin UI for all content (intro, projects, career, skills, socials)
 - Clerk-protected admin routes
 - Full CRUD admin API endpoints with JWT middleware
@@ -76,7 +76,7 @@ wrangler d1 migrations apply homepage --local
 wrangler d1 migrations apply homepage --remote
 ```
 
-> **Note:** `0001` adds the `skills` table, `career_sections.active` and `intro.on_air_since`. Apply it to the remote D1 before deploying the new homepage design.
+> **Note:** `0001` adds the `skills` table, `career_sections.active` and `intro.on_air_since`; `0002` adds `intro.station_name` and `intro.station_frequency`. Apply them to the remote D1 before deploying the new homepage design.
 
 ## Seeding
 

@@ -6,6 +6,8 @@ export type Intro = {
   bio: string | null;
   avatar_url: string | null;
   on_air_since: string | null;
+  station_name: string | null;
+  station_frequency: string | null;
 };
 
 export type Project = {

@@ -12,6 +12,8 @@ export const intro = sqliteTable("intro", {
   bio: text("bio"),
   avatar_url: text("avatar_url"),
   on_air_since: text("on_air_since"),
+  station_name: text("station_name"),
+  station_frequency: text("station_frequency"),
 });
 
 export const projects = sqliteTable("projects", {

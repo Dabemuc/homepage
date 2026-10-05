@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Intro } from "@/lib/api";
-import { STATION, LABEL } from "@/lib/station";
+import { STATION, LABEL, stationOf } from "@/lib/station";
 import { useVisitorNumber } from "@/lib/visitor";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -10,12 +10,13 @@ export default function QslCard({ intro }: { intro: Intro | null }) {
   const [now] = useState(() => new Date());
   const visitorNumber = useVisitorNumber();
   const sinceYear = intro?.on_air_since?.slice(0, 4);
+  const station = stationOf(intro);
 
   const fields = [
     { label: "TO RADIO", value: "YOU" },
     { label: "DATE", value: `${now.getUTCFullYear()}.${pad(now.getUTCMonth() + 1)}.${pad(now.getUTCDate())}` },
     { label: "UTC", value: `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}` },
-    { label: "FREQ", value: STATION.frequency },
+    { label: "FREQ", value: station.frequency },
     { label: "MODE", value: "HTTPS" },
     { label: "RST", value: "599" },
   ];
@@ -41,7 +42,7 @@ export default function QslCard({ intro }: { intro: Intro | null }) {
       <div>
         <div className={`${LABEL} text-tx-muted`}>FROM STATION</div>
         <div className="font-display font-extrabold text-[clamp(56px,8vw,104px)] leading-[0.85] tracking-[-0.01em] uppercase break-words">
-          {intro?.name ?? STATION.name}
+          {intro?.name ?? station.name}
         </div>
       </div>
 
