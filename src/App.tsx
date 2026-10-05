@@ -33,12 +33,14 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          {/* "/*": Clerk's multi-step flow lives on sub-paths (/sign-in/factor-one, /sign-in/sso-callback, …);
+              without it the catch-all below redirected every second step back to "/" */}
           <Route
-            path="/sign-in"
+            path="/sign-in/*"
             element={
               <WithClerk>
                 <div className="flex items-center justify-center min-h-screen">
-                  <SignIn routing="path" path="/sign-in" />
+                  <SignIn routing="path" path="/sign-in" fallbackRedirectUrl="/admin" />
                 </div>
               </WithClerk>
             }
