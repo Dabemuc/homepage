@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { adminGetIntro, adminUpdateIntro } from "@/lib/api";
+import { DEFAULT_BUILD_LOG, STATION } from "@/lib/station";
 
 export default function AdminIntro() {
   const { getToken } = useAuth();
@@ -14,7 +15,11 @@ export default function AdminIntro() {
     name: "",
     tagline: "",
     bio: "",
-    avatar_url: "",
+    on_air_since: "",
+    station_name: "",
+    station_frequency: "",
+    build_log: "",
+    headline: "",
   });
 
   useEffect(() => {
@@ -25,7 +30,11 @@ export default function AdminIntro() {
             name: data.name ?? "",
             tagline: data.tagline ?? "",
             bio: data.bio ?? "",
-            avatar_url: data.avatar_url ?? "",
+            on_air_since: data.on_air_since ?? "",
+            station_name: data.station_name ?? "",
+            station_frequency: data.station_frequency ?? "",
+            build_log: data.build_log ?? "",
+            headline: data.headline ?? "",
           });
         }
       })
@@ -52,7 +61,7 @@ export default function AdminIntro() {
       <h1 className="text-2xl font-bold mb-6">Intro</h1>
       <div className="space-y-4">
         <div>
-          <label className="text-sm font-medium mb-1 block">Name</label>
+          <label className="text-sm font-medium mb-1 block">Name / Callsign</label>
           <Input
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
@@ -66,6 +75,7 @@ export default function AdminIntro() {
             onChange={(e) => setForm((f) => ({ ...f, tagline: e.target.value }))}
             placeholder="A short subtitle"
           />
+          <p className="text-xs text-muted-foreground mt-1">Shown next to the headline at the top of the page</p>
         </div>
         <div>
           <label className="text-sm font-medium mb-1 block">Bio</label>
@@ -75,14 +85,64 @@ export default function AdminIntro() {
             placeholder="A longer bio paragraph"
             rows={5}
           />
+          <p className="text-xs text-muted-foreground mt-1">Shown in the operator profile</p>
         </div>
         <div>
-          <label className="text-sm font-medium mb-1 block">Avatar URL</label>
-          <Input
-            value={form.avatar_url}
-            onChange={(e) => setForm((f) => ({ ...f, avatar_url: e.target.value }))}
-            placeholder="/screenshots/avatar.jpg or https://..."
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Station name</label>
+              <Input
+                value={form.station_name}
+                onChange={(e) => setForm((f) => ({ ...f, station_name: e.target.value }))}
+                placeholder={STATION.name}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Frequency (MHz)</label>
+              <Input
+                value={form.station_frequency}
+                onChange={(e) => setForm((f) => ({ ...f, station_frequency: e.target.value }))}
+                placeholder={STATION.frequency}
+              />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Top bar shows "{form.station_name || STATION.name} — {form.station_frequency || STATION.frequency} MHz"; the frequency also appears on the QSL card
+          </p>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Headline</label>
+          <Textarea
+            value={form.headline}
+            onChange={(e) => setForm((f) => ({ ...f, headline: e.target.value }))}
+            placeholder={STATION.headline.join("\n")}
+            rows={2}
           />
+          <p className="text-xs text-muted-foreground mt-1">
+            The huge hero headline, one line per row (two short lines work best). Empty uses the placeholder.
+          </p>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Build log</label>
+          <Textarea
+            value={form.build_log}
+            onChange={(e) => setForm((f) => ({ ...f, build_log: e.target.value }))}
+            placeholder={DEFAULT_BUILD_LOG.join("\n")}
+            rows={4}
+            className="font-mono text-sm"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Typed line by line into the hero terminal while the mast builds; ends with "DEPLOYED — ON AIR". Keep lines short (~28 characters). Empty uses the placeholder.
+          </p>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">On air since</label>
+          <Input
+            type="date"
+            value={form.on_air_since}
+            onChange={(e) => setForm((f) => ({ ...f, on_air_since: e.target.value }))}
+          />
+          <p className="text-xs text-muted-foreground mt-1">Drives the "LIVE — DAY n" counter. Leave empty to hide it.</p>
         </div>
         <Button onClick={handleSave} disabled={saving}>
           {saving ? "Saving..." : saved ? "Saved!" : "Save Changes"}

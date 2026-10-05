@@ -5,6 +5,11 @@ export type Intro = {
   tagline: string | null;
   bio: string | null;
   avatar_url: string | null;
+  on_air_since: string | null;
+  station_name: string | null;
+  station_frequency: string | null;
+  build_log: string | null;
+  headline: string | null;
 };
 
 export type Project = {
@@ -34,6 +39,7 @@ export type CareerSection = {
   title: string | null;
   display_order: number | null;
   visible: boolean | null;
+  active: boolean | null;
   entries: CareerEntry[];
 };
 
@@ -47,12 +53,21 @@ export type SocialLink = {
   visible: boolean | null;
 };
 
+export type Skill = {
+  id: number;
+  label: string | null;
+  value: string | null;
+  display_order: number | null;
+  visible: boolean | null;
+};
+
 export type HomepageData = {
   config: Record<string, string | null>;
   intro: Intro | null;
   projects: Project[];
   career: CareerSection[];
   socials: SocialLink[];
+  skills: Skill[];
 };
 
 // Public API
@@ -61,6 +76,13 @@ export async function fetchHomepage(): Promise<HomepageData> {
   if (!res.ok) throw new Error("Failed to fetch homepage data");
   const json = await res.json() as { success: boolean; data: HomepageData };
   return json.data;
+}
+
+export async function registerVisit(): Promise<number | null> {
+  const res = await fetch("/api/public/visit", { method: "POST" });
+  if (!res.ok) throw new Error("Failed to register visit");
+  const json = await res.json() as { success: boolean; data: { number: number | null } };
+  return json.data.number;
 }
 
 // Admin API helpers
@@ -219,4 +241,37 @@ export async function adminDeleteSocial(
   getToken: () => Promise<string | null>
 ): Promise<void> {
   await adminFetch(`/api/admin/socials?id=${id}`, { method: "DELETE" }, getToken);
+}
+
+// Admin Skills
+export async function adminGetSkills(getToken: () => Promise<string | null>): Promise<Skill[]> {
+  const res = await adminFetch("/api/admin/skills", { method: "GET" }, getToken);
+  const json = await res.json() as { success: boolean; data: Skill[] };
+  return json.data;
+}
+
+export async function adminCreateSkill(
+  data: Partial<Skill>,
+  getToken: () => Promise<string | null>
+): Promise<Skill> {
+  const res = await adminFetch("/api/admin/skills", { method: "POST", body: JSON.stringify(data) }, getToken);
+  const json = await res.json() as { success: boolean; data: Skill };
+  return json.data;
+}
+
+export async function adminUpdateSkill(
+  id: number,
+  data: Partial<Skill>,
+  getToken: () => Promise<string | null>
+): Promise<Skill> {
+  const res = await adminFetch(`/api/admin/skills?id=${id}`, { method: "PUT", body: JSON.stringify(data) }, getToken);
+  const json = await res.json() as { success: boolean; data: Skill };
+  return json.data;
+}
+
+export async function adminDeleteSkill(
+  id: number,
+  getToken: () => Promise<string | null>
+): Promise<void> {
+  await adminFetch(`/api/admin/skills?id=${id}`, { method: "DELETE" }, getToken);
 }

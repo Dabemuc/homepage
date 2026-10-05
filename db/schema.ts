@@ -11,6 +11,11 @@ export const intro = sqliteTable("intro", {
   tagline: text("tagline"),
   bio: text("bio"),
   avatar_url: text("avatar_url"),
+  on_air_since: text("on_air_since"),
+  station_name: text("station_name"),
+  station_frequency: text("station_frequency"),
+  build_log: text("build_log"),
+  headline: text("headline"),
 });
 
 export const projects = sqliteTable("projects", {
@@ -31,6 +36,7 @@ export const careerSections = sqliteTable("career_sections", {
   title: text("title"),
   display_order: integer("display_order"),
   visible: integer("visible", { mode: "boolean" }),
+  active: integer("active", { mode: "boolean" }),
 });
 
 export const careerEntries = sqliteTable("career_entries", {
@@ -48,6 +54,14 @@ export const socialLinks = sqliteTable("social_links", {
   label: text("label"),
   url: text("url"),
   icon: text("icon"),
+  display_order: integer("display_order"),
+  visible: integer("visible", { mode: "boolean" }),
+});
+
+export const skills = sqliteTable("skills", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  label: text("label"),
+  value: text("value"),
   display_order: integer("display_order"),
   visible: integer("visible", { mode: "boolean" }),
 });

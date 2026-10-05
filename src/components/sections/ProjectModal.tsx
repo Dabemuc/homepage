@@ -1,79 +1,70 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ExternalLink, Github } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import Markdown from "@/components/Markdown";
 import type { Project } from "@/lib/api";
-import { tagColor } from "@/lib/tagColor";
+import { LABEL, parseTags } from "@/lib/station";
 
 type Props = {
   project: Project | null;
+  code: string;
   onClose: () => void;
 };
 
-export default function ProjectModal({ project, onClose }: Props) {
+export default function ProjectModal({ project, code, onClose }: Props) {
   if (!project) return null;
 
-  const tags: string[] = project.tags ? JSON.parse(project.tags) : [];
+  const tags = parseTags(project.tags);
+  const links = [
+    { href: project.repo_url, label: "REPO" },
+    { href: project.website_url, label: "SITE" },
+  ].filter((l): l is { href: string; label: string } => !!l.href);
 
   return (
     <Dialog open={!!project} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="flex flex-col w-[90vw] max-w-2xl h-[75vh] p-0 gap-0 overflow-hidden">
-        {/* Header: title + links inline, pr-10 keeps clear of the close button */}
-        <div className="flex items-center gap-3 px-6 pt-6 pb-4 pr-12 border-b border-border/50 flex-shrink-0">
-          <h2 className="text-xl font-semibold leading-snug text-foreground">
-            {project.title}
-          </h2>
-          <div className="flex gap-2 flex-shrink-0">
-            {project.repo_url && (
-              <a
-                href={project.repo_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Repository"
-                className="text-muted-foreground/60 hover:text-primary transition-colors duration-200"
-              >
-                <Github className="w-4 h-4" />
-              </a>
-            )}
-            {project.website_url && (
-              <a
-                href={project.website_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Website"
-                className="text-muted-foreground/60 hover:text-primary transition-colors duration-200"
-              >
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            )}
+      <DialogContent
+        showCloseButton={false}
+        className="flex flex-col w-[calc(100%-2rem)] max-w-3xl sm:max-w-3xl max-h-[85vh] p-0 gap-0 overflow-hidden rounded-none ring-0 border border-tx-ink bg-tx-paper text-tx-ink font-station text-[13px] shadow-[10px_10px_0_var(--color-tx-ink)]"
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 px-5 md:px-8 pt-6 pb-5 border-b border-tx-ink flex-shrink-0">
+          <div className="flex flex-col gap-2 min-w-0">
+            <span className={`${LABEL} text-tx-signal font-bold`}>● {code} — DECODED</span>
+            <DialogTitle className="font-display font-extrabold text-4xl md:text-5xl leading-[0.9] uppercase break-words">
+              {project.title}
+            </DialogTitle>
           </div>
+          <DialogClose className={`${LABEL} flex-shrink-0 cursor-pointer hover:text-tx-signal`}>CLOSE ✕</DialogClose>
         </div>
 
-        {/* Tags */}
-        {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 px-6 py-3 border-b border-border/50 flex-shrink-0">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${tagColor(tag)}`}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Description — scrollable */}
-        <div className="flex-1 overflow-y-auto px-6 py-5">
-          {project.description ? (
-            <div className="prose prose-sm dark:prose-invert max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {project.description.replace(/\\n/g, "\n")}
-              </ReactMarkdown>
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground italic">No description.</p>
+        {/* Scrollable body */}
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          {project.screenshot && (
+            <img
+              src={`/screenshots/${project.screenshot}`}
+              alt={project.title ?? "Project screenshot"}
+              className="block w-full aspect-video object-cover border-b border-tx-ink"
+            />
           )}
+
+          {(tags.length > 0 || links.length > 0) && (
+            <div className="flex flex-wrap justify-between gap-x-6 gap-y-2 px-5 md:px-8 py-4 border-b border-tx-rule">
+              <span className="text-tx-muted uppercase">{tags.join(" · ")}</span>
+              <span className="flex gap-5 font-bold">
+                {links.map(({ href, label }) => (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="text-tx-ink hover:text-tx-signal">
+                    {label} ↗
+                  </a>
+                ))}
+              </span>
+            </div>
+          )}
+
+          <div className="px-5 md:px-8 py-6">
+            {project.description ? (
+              <Markdown>{project.description}</Markdown>
+            ) : (
+              <p className="text-tx-muted">NO FURTHER DATA RECOVERED.</p>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
