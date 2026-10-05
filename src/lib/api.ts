@@ -9,6 +9,7 @@ export type Intro = {
   station_name: string | null;
   station_frequency: string | null;
   build_log: string | null;
+  headline: string | null;
 };
 
 export type Project = {

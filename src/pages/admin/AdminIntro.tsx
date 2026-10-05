@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { adminGetIntro, adminUpdateIntro } from "@/lib/api";
-import { DEFAULT_BUILD_LOG } from "@/lib/station";
+import { DEFAULT_BUILD_LOG, STATION } from "@/lib/station";
 
 export default function AdminIntro() {
   const { getToken } = useAuth();
@@ -19,6 +19,7 @@ export default function AdminIntro() {
     station_name: "",
     station_frequency: "",
     build_log: "",
+    headline: "",
   });
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export default function AdminIntro() {
             station_name: data.station_name ?? "",
             station_frequency: data.station_frequency ?? "",
             build_log: data.build_log ?? "",
+            headline: data.headline ?? "",
           });
         }
       })
@@ -106,6 +108,18 @@ export default function AdminIntro() {
           </div>
           <p className="text-xs text-muted-foreground mt-1">
             Top bar shows "{form.station_name || "Station D"} — {form.station_frequency || "147.300"} MHz"; the frequency also appears on the QSL card
+          </p>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Headline</label>
+          <Textarea
+            value={form.headline}
+            onChange={(e) => setForm((f) => ({ ...f, headline: e.target.value }))}
+            placeholder={STATION.headline.join("\n")}
+            rows={2}
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            The huge hero headline, one line per row (two short lines work best). Empty uses the placeholder.
           </p>
         </div>
         <div>

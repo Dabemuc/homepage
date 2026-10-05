@@ -15,6 +15,7 @@ export const intro = sqliteTable("intro", {
   station_name: text("station_name"),
   station_frequency: text("station_frequency"),
   build_log: text("build_log"),
+  headline: text("headline"),
 });
 
 export const projects = sqliteTable("projects", {

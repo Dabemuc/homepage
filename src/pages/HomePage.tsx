@@ -9,7 +9,7 @@ import SocialRail from "@/components/SocialRail";
 import TunerBar from "@/components/TunerBar";
 import { fetchHomepage } from "@/lib/api";
 import type { HomepageData } from "@/lib/api";
-import { WRAP, LABEL, parseBuildLog, stationOf } from "@/lib/station";
+import { WRAP, LABEL, parseBuildLog, parseHeadline, stationOf } from "@/lib/station";
 
 export default function HomePage() {
   const [data, setData] = useState<HomepageData | null>(null);
@@ -54,6 +54,7 @@ export default function HomePage() {
     () => (data ? parseBuildLog(data.intro?.build_log) : error ? parseBuildLog(null) : null),
     [data, error]
   );
+  const headline = data ? parseHeadline(data.intro?.headline) : error ? parseHeadline(null) : null;
 
   return (
     <div className="min-h-screen bg-tx-paper text-tx-ink font-station text-[13px] overflow-x-clip">
@@ -61,7 +62,7 @@ export default function HomePage() {
       <SocialRail socials={data?.socials ?? []} />
       {data && <TunerBar links={navLinks} stationName={station.name} />}
 
-      <Hero intro={intro} station={station} links={data ? navLinks : []} buildLog={buildLog} />
+      <Hero intro={intro} station={station} links={data ? navLinks : []} buildLog={buildLog} headline={headline} />
 
       {loading && (
         <div className={`${WRAP} ${LABEL} pb-24 text-tx-muted`}>

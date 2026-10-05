@@ -1,6 +1,6 @@
 import type { Intro } from "@/lib/api";
 
-// Fixed copy for the "Last Transmission" homepage design (name/frequency are defaults, editable on the admin Intro page).
+// Fixed copy for the "Last Transmission" homepage design (name/frequency/headline are defaults, editable on the admin Intro page).
 export const STATION = {
   name: "Station D",
   frequency: "147.300",
@@ -28,6 +28,12 @@ export const DEFAULT_BUILD_LOG = [
 export function parseBuildLog(text: string | null | undefined): string[] {
   const lines = (text ?? "").split("\n").map((l) => l.trimEnd()).filter(Boolean);
   return lines.length > 0 ? lines : DEFAULT_BUILD_LOG;
+}
+
+/** Hero headline lines from the admin text (one line per row), falling back to the default. */
+export function parseHeadline(text: string | null | undefined): string[] {
+  const lines = (text ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
+  return lines.length > 0 ? lines : STATION.headline;
 }
 
 /** Horizontal position (%) of each station on the tuner dial: evenly spaced, centered in equal slots. */

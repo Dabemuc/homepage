@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import type { Intro } from "@/lib/api";
 import { STATION, WRAP, LABEL, daysOnAir, stationPosition } from "@/lib/station";
 import { useBuildSequence } from "@/lib/useBuildSequence";
@@ -11,6 +11,8 @@ type Props = {
   links: NavLink[];
   /** Terminal lines for the build animation; null until data has loaded */
   buildLog: string[] | null;
+  /** Headline lines; null until data has loaded (the default holds the space invisibly, so nothing flashes) */
+  headline: string[] | null;
 };
 
 // ── Scene geometry (viewBox 0 0 900 420, ground at y=420) ──
@@ -41,7 +43,7 @@ const towerBraces = (() => {
 const TERM = { x: 60, y: 270, w: 270, h: 150 };
 const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 
-export default function Hero({ intro, station, links, buildLog }: Props) {
+export default function Hero({ intro, station, links, buildLog, headline }: Props) {
   const [run, setRun] = useState(0);
   const { typed, progress, live } = useBuildSequence(buildLog, run);
   const day = daysOnAir(intro?.on_air_since);
@@ -159,10 +161,17 @@ export default function Hero({ intro, station, links, buildLog }: Props) {
       <HorizonDial frequency={station.frequency} links={links} />
 
       <div className={`${WRAP} mt-12 md:mt-16 flex flex-wrap justify-between items-end gap-8`}>
-        <h1 className="m-0 font-display font-extrabold text-[clamp(52px,10vw,150px)] leading-[0.86] uppercase tracking-[-0.01em]">
-          {STATION.headline[0]}
-          <br />
-          {STATION.headline[1]}
+        <h1
+          className={`m-0 font-display font-extrabold text-[clamp(52px,10vw,150px)] leading-[0.86] uppercase tracking-[-0.01em] ${
+            headline ? "" : "invisible"
+          }`}
+        >
+          {(headline ?? STATION.headline).map((line, i) => (
+            <Fragment key={i}>
+              {i > 0 && <br />}
+              {line}
+            </Fragment>
+          ))}
         </h1>
         <div className="max-w-[300px] flex flex-col gap-3 leading-[1.6]">
           {live ? (
