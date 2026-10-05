@@ -44,6 +44,21 @@ export default {
 
     const db = drizzle(env.DB, { schema });
 
+    // POST /api/public/visit — hands out the next QSL visitor number (the client stores it per browser)
+    if (pathname === "/api/public/visit" && method === "POST") {
+      const userAgent = request.headers.get("User-Agent") ?? "";
+      if (!userAgent || /bot|crawl|spider|slurp|headless|lighthouse|preview|monitor/i.test(userAgent)) {
+        return Response.json({ success: true, data: { number: null } });
+      }
+      // Single statement, so concurrent visits can't receive the same number
+      const row = await env.DB.prepare(
+        `INSERT INTO site_config (key, value) VALUES ('visitor_count', '1')
+         ON CONFLICT(key) DO UPDATE SET value = CAST(CAST(value AS INTEGER) + 1 AS TEXT)
+         RETURNING value`
+      ).first<{ value: string }>();
+      return Response.json({ success: true, data: { number: row ? parseInt(row.value) : null } });
+    }
+
     // GET /api/public/homepage
     if (pathname === "/api/public/homepage" && method === "GET") {
       try {

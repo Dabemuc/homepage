@@ -74,6 +74,13 @@ export async function fetchHomepage(): Promise<HomepageData> {
   return json.data;
 }
 
+export async function registerVisit(): Promise<number | null> {
+  const res = await fetch("/api/public/visit", { method: "POST" });
+  if (!res.ok) throw new Error("Failed to register visit");
+  const json = await res.json() as { success: boolean; data: { number: number | null } };
+  return json.data.number;
+}
+
 // Admin API helpers
 async function adminFetch(
   url: string,

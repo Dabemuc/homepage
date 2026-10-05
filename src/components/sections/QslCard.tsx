@@ -1,12 +1,14 @@
 import { useState } from "react";
 import type { Intro } from "@/lib/api";
 import { STATION, LABEL } from "@/lib/station";
+import { useVisitorNumber } from "@/lib/visitor";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /** A radio QSL card "confirming contact" with the visitor; date/time are the moment of the visit. */
 export default function QslCard({ intro }: { intro: Intro | null }) {
   const [now] = useState(() => new Date());
+  const visitorNumber = useVisitorNumber();
   const sinceYear = intro?.on_air_since?.slice(0, 4);
 
   const fields = [
@@ -21,7 +23,12 @@ export default function QslCard({ intro }: { intro: Intro | null }) {
   return (
     <div className="relative overflow-hidden w-full max-w-[600px] mx-auto -rotate-2 bg-tx-card border border-tx-ink shadow-[10px_10px_0_var(--color-tx-ink)] p-5 sm:p-7 flex flex-col gap-5">
       <div className={`${LABEL} flex justify-between items-start gap-4`}>
-        <span className="font-bold">QSL · CONFIRMING OUR CONTACT</span>
+        <span className="flex flex-col gap-1">
+          <span className="font-bold">
+            QSL NO. {visitorNumber !== null ? String(visitorNumber).padStart(6, "0") : "------"}
+          </span>
+          <span className="text-tx-muted">CONFIRMING OUR CONTACT</span>
+        </span>
         {/* Miniature of the hero station */}
         <svg viewBox="0 0 46 34" aria-hidden className="w-[46px] h-[34px] flex-shrink-0 fill-tx-ink">
           <rect x="4" y="18" width="38" height="12" />
@@ -54,7 +61,7 @@ export default function QslCard({ intro }: { intro: Intro | null }) {
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-between items-end gap-4">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between items-start sm:items-end gap-4">
         <span className={`${LABEL} text-tx-muted`}>PSE QSL · TNX FOR TUNING IN</span>
         <span className="font-display font-light text-[30px] leading-none">73, {STATION.operator}</span>
       </div>
