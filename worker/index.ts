@@ -44,7 +44,7 @@ export default {
 
     const db = drizzle(env.DB, { schema });
 
-    // POST /api/public/visit — hands out the next QSL visitor number (the client stores it per browser)
+    // POST /api/public/visit — counts a page visit and returns its QSL number
     if (pathname === "/api/public/visit" && method === "POST") {
       const userAgent = request.headers.get("User-Agent") ?? "";
       if (!userAgent || /bot|crawl|spider|slurp|headless|lighthouse|preview|monitor/i.test(userAgent)) {
