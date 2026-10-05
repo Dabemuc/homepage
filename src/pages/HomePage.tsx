@@ -4,9 +4,10 @@ import BroadcastsSection from "@/components/sections/BroadcastsSection";
 import LogSection from "@/components/sections/LogSection";
 import OperatorSection from "@/components/sections/OperatorSection";
 import RespondFooter from "@/components/sections/RespondFooter";
+import SiteHeader from "@/components/SiteHeader";
 import { fetchHomepage } from "@/lib/api";
 import type { HomepageData } from "@/lib/api";
-import { STATION, WRAP, LABEL } from "@/lib/station";
+import { WRAP, LABEL } from "@/lib/station";
 
 export default function HomePage() {
   const [data, setData] = useState<HomepageData | null>(null);
@@ -44,18 +45,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-tx-paper text-tx-ink font-station text-[13px] overflow-x-hidden">
-      <header className={`${WRAP} ${LABEL} py-6 flex flex-wrap justify-between gap-5`}>
-        <span className="uppercase">
-          {STATION.name} — {STATION.frequency} MHZ
-        </span>
-        <nav className="flex flex-wrap gap-7">
-          {navLinks.map(({ id, label }) => (
-            <a key={id} href={`#${id}`} className="text-tx-ink no-underline hover:text-tx-signal">
-              {label}
-            </a>
-          ))}
-        </nav>
-      </header>
+      <SiteHeader links={navLinks} />
 
       <Hero intro={intro} />
 
