@@ -6,7 +6,7 @@ export const STATION = {
   frequency: "147.300",
   qth: "Germany",
   operator: "Daniel",
-  headline: ["Broadcasting", "from localhost"],
+  headline: ["Shipping", "beyond localhost"],
 };
 
 /** Station name + frequency from the intro, falling back to the defaults above. */

@@ -116,7 +116,11 @@ export default function SiteHeader({ links, intro, socials }: Props) {
         }`}
       >
         <div className="flex items-center justify-between gap-4">
-          <span className="text-tx-rule uppercase">{stationLabel}</span>
+          {/* Name and frequency on separate lines so long names never squeeze the close button */}
+          <span className="flex flex-col gap-1 text-tx-rule uppercase">
+            <span>{intro === undefined ? "\u00a0" : station.name}</span>
+            <span>{intro === undefined ? "\u00a0" : `${station.frequency} MHZ`}</span>
+          </span>
           <button
             ref={closeRef}
             type="button"

@@ -19,8 +19,8 @@ INSERT OR REPLACE INTO intro (id, name, tagline, bio, avatar_url, on_air_since, 
 Compiling antenna v0.3.1
 Compiling transmitter v1.4.7
 Finished release in 3.14s',
-  'Broadcasting
-from localhost'
+  'Shipping
+beyond localhost'
 );
 
 -- Projects
