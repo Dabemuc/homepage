@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import SocialIcon from "@/components/SocialIcon";
 import type { SocialLink } from "@/lib/api";
 import { WRAP, LABEL } from "@/lib/station";
 
@@ -50,9 +51,10 @@ export default function RespondFooter({ socials, name }: Props) {
                   href={social.url!}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-tx-card uppercase underline hover:text-tx-ink"
+                  className="group flex items-center gap-2 text-tx-card uppercase no-underline hover:text-tx-ink"
                 >
-                  {social.label ?? social.platform}
+                  <SocialIcon social={social} className="w-4 h-4" />
+                  <span className="underline underline-offset-4">{social.label ?? social.platform}</span>
                 </a>
               ))}
             </div>
