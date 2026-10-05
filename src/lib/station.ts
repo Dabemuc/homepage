@@ -2,7 +2,7 @@ import type { Intro } from "@/lib/api";
 
 // Fixed copy for the "Last Transmission" homepage design (name/frequency/headline are defaults, editable on the admin Intro page).
 export const STATION = {
-  name: "Station D",
+  name: "Dabemuc/Portfolio",
   frequency: "147.300",
   qth: "Germany",
   operator: "Daniel",

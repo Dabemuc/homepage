@@ -13,7 +13,7 @@ INSERT OR REPLACE INTO intro (id, name, tagline, bio, avatar_url, on_air_since, 
   'I build fast, reliable software with a focus on clean architecture and developer experience. Passionate about Rust, TypeScript, and edge computing.',
   null,
   '2019-01-01',
-  'Station D',
+  'Dabemuc/Portfolio',
   '147.300',
   '$ cargo build --release
 Compiling antenna v0.3.1

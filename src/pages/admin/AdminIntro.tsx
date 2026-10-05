@@ -94,7 +94,7 @@ export default function AdminIntro() {
               <Input
                 value={form.station_name}
                 onChange={(e) => setForm((f) => ({ ...f, station_name: e.target.value }))}
-                placeholder="Station D"
+                placeholder={STATION.name}
               />
             </div>
             <div>
@@ -102,12 +102,12 @@ export default function AdminIntro() {
               <Input
                 value={form.station_frequency}
                 onChange={(e) => setForm((f) => ({ ...f, station_frequency: e.target.value }))}
-                placeholder="147.300"
+                placeholder={STATION.frequency}
               />
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Top bar shows "{form.station_name || "Station D"} — {form.station_frequency || "147.300"} MHz"; the frequency also appears on the QSL card
+            Top bar shows "{form.station_name || STATION.name} — {form.station_frequency || STATION.frequency} MHz"; the frequency also appears on the QSL card
           </p>
         </div>
         <div>
