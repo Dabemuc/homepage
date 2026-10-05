@@ -4,7 +4,8 @@ A personal portfolio homepage with a fully configurable admin UI, hosted on Clou
 
 ## Tech Stack
 
-- **Frontend**: Vite + React 19, TypeScript, Tailwind CSS v4, shadcn/ui
+- **Frontend**: Vite + React 19, TypeScript, Tailwind CSS v4, shadcn/ui (admin)
+- **Fonts**: Barlow Condensed + Space Mono, self-hosted via Fontsource (the CSP only allows `font-src 'self'`)
 - **Hosting**: Cloudflare Workers
 - **API**: Cloudflare Worker (`worker/index.ts`)
 - **Database**: Cloudflare D1 (SQLite) via Drizzle ORM
@@ -13,9 +14,13 @@ A personal portfolio homepage with a fully configurable admin UI, hosted on Clou
 
 ## Features
 
-- Public homepage with intro, project cards, career timeline
-- Project detail modal with Markdown rendering
-- Admin UI for all content (intro, projects, career, socials)
+- Public homepage in the "Last Transmission" design (radio-station theme, fixed light palette):
+  - **Hero** — station illustration, headline, tagline and a `LIVE — DAY n` counter (days since the intro's *On air since* date)
+  - **Broadcasts** — projects as `TX-00n` rows; clicking one opens a detail modal with screenshot, links and Markdown description
+  - **Station log** — career sections as logbook sessions (the one marked *On air* is highlighted as the current position)
+  - **Operator profile** — a QSL card "issued" to each visitor, the bio, and a two-column skills grid
+  - **Respond** — footer with the `mailto:` social as the main call to action plus the other social links
+- Admin UI for all content (intro, projects, career, skills, socials)
 - Clerk-protected admin routes
 - Full CRUD admin API endpoints with JWT middleware
 
@@ -68,6 +73,8 @@ wrangler d1 migrations apply homepage --local
 # Apply to remote D1 (production)
 wrangler d1 migrations apply homepage --remote
 ```
+
+> **Note:** `0001` adds the `skills` table, `career_sections.active` and `intro.on_air_since`. Apply it to the remote D1 before deploying the new homepage design.
 
 ## Seeding
 
@@ -132,14 +139,15 @@ npm run cf-typegen
 │   └── screenshots/          # Project screenshots
 ├── src/
 │   ├── components/
-│   │   ├── sections/         # HomePage section components
+│   │   ├── sections/         # HomePage sections (Hero, Broadcasts, Log, Operator, Respond)
 │   │   ├── ui/               # shadcn/ui components
-│   │   └── SocialsPanel.tsx
+│   │   └── Markdown.tsx      # Markdown renderer styled for the homepage
 │   ├── pages/
 │   │   ├── HomePage.tsx
 │   │   └── admin/            # Admin pages (Clerk-protected)
 │   ├── lib/
-│   │   └── api.ts            # Typed API fetch wrappers
+│   │   ├── api.ts            # Typed API fetch wrappers
+│   │   └── station.ts        # Fixed homepage copy (station name, frequency, QTH…) + helpers
 │   ├── App.tsx
 │   └── main.tsx
 ├── worker/

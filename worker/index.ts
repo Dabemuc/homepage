@@ -47,13 +47,14 @@ export default {
     // GET /api/public/homepage
     if (pathname === "/api/public/homepage" && method === "GET") {
       try {
-        const [config, introRows, projectRows, sectionRows, entryRows, socialRows] = await Promise.all([
+        const [config, introRows, projectRows, sectionRows, entryRows, socialRows, skillRows] = await Promise.all([
           db.select().from(schema.siteConfig),
           db.select().from(schema.intro),
           db.select().from(schema.projects).where(eq(schema.projects.visible, true)).orderBy(schema.projects.display_order),
           db.select().from(schema.careerSections).where(eq(schema.careerSections.visible, true)).orderBy(schema.careerSections.display_order),
           db.select().from(schema.careerEntries).orderBy(schema.careerEntries.display_order),
           db.select().from(schema.socialLinks).where(eq(schema.socialLinks.visible, true)).orderBy(schema.socialLinks.display_order),
+          db.select().from(schema.skills).where(eq(schema.skills.visible, true)).orderBy(schema.skills.display_order),
         ]);
 
         const configMap = Object.fromEntries(config.map((c) => [c.key, c.value]));
@@ -64,7 +65,7 @@ export default {
 
         return Response.json({
           success: true,
-          data: { config: configMap, intro: introRows[0] ?? null, projects: projectRows, career, socials: socialRows },
+          data: { config: configMap, intro: introRows[0] ?? null, projects: projectRows, career, socials: socialRows, skills: skillRows },
         });
       } catch (err) {
         return Response.json({ success: false, error: String(err) }, { status: 500 });
@@ -78,7 +79,7 @@ export default {
         return Response.json({ success: true, data: rows[0] ?? null });
       }
       if (method === "PUT") {
-        const body = await request.json() as { name?: string; tagline?: string; bio?: string; avatar_url?: string };
+        const body = await request.json() as { name?: string; tagline?: string; bio?: string; avatar_url?: string; on_air_since?: string };
         const existing = await db.select().from(schema.intro).where(eq(schema.intro.id, 1));
         if (existing.length === 0) {
           await db.insert(schema.intro).values({ id: 1, ...body });
@@ -129,7 +130,7 @@ export default {
 
     // /api/admin/career
     if (pathname === "/api/admin/career") {
-      type SectionBody = { title?: string; display_order?: number; visible?: boolean };
+      type SectionBody = { title?: string; display_order?: number; visible?: boolean; active?: boolean };
       type EntryBody = { section_id?: number; timestamp?: string; title?: string; description?: string; display_order?: number };
 
       if (method === "GET") {
@@ -218,6 +219,42 @@ export default {
 
       if (method === "DELETE") {
         await db.delete(schema.socialLinks).where(eq(schema.socialLinks.id, parseInt(id)));
+        return Response.json({ success: true });
+      }
+    }
+
+    // /api/admin/skills
+    if (pathname === "/api/admin/skills") {
+      type SkillBody = {
+        label?: string;
+        value?: string;
+        display_order?: number;
+        visible?: boolean;
+      };
+
+      if (method === "GET") {
+        const rows = await db.select().from(schema.skills).orderBy(schema.skills.display_order);
+        return Response.json({ success: true, data: rows });
+      }
+      if (method === "POST") {
+        const body = await request.json() as SkillBody;
+        const result = await db.insert(schema.skills).values(body).returning();
+        return Response.json({ success: true, data: result[0] }, { status: 201 });
+      }
+
+      const id = url.searchParams.get("id");
+      if (!id) return Response.json({ success: false, error: "MISSING_ID" }, { status: 400 });
+
+      if (method === "PUT") {
+        const body = await request.json() as SkillBody;
+        await db.update(schema.skills).set(body).where(eq(schema.skills.id, parseInt(id)));
+        const updated = await db.select().from(schema.skills).where(eq(schema.skills.id, parseInt(id)));
+        if (updated.length === 0) return Response.json({ success: false, error: "SKILL_NOT_FOUND" }, { status: 404 });
+        return Response.json({ success: true, data: updated[0] });
+      }
+
+      if (method === "DELETE") {
+        await db.delete(schema.skills).where(eq(schema.skills.id, parseInt(id)));
         return Response.json({ success: true });
       }
     }

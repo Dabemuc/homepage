@@ -5,6 +5,7 @@ export type Intro = {
   tagline: string | null;
   bio: string | null;
   avatar_url: string | null;
+  on_air_since: string | null;
 };
 
 export type Project = {
@@ -34,6 +35,7 @@ export type CareerSection = {
   title: string | null;
   display_order: number | null;
   visible: boolean | null;
+  active: boolean | null;
   entries: CareerEntry[];
 };
 
@@ -47,12 +49,21 @@ export type SocialLink = {
   visible: boolean | null;
 };
 
+export type Skill = {
+  id: number;
+  label: string | null;
+  value: string | null;
+  display_order: number | null;
+  visible: boolean | null;
+};
+
 export type HomepageData = {
   config: Record<string, string | null>;
   intro: Intro | null;
   projects: Project[];
   career: CareerSection[];
   socials: SocialLink[];
+  skills: Skill[];
 };
 
 // Public API
@@ -219,4 +230,37 @@ export async function adminDeleteSocial(
   getToken: () => Promise<string | null>
 ): Promise<void> {
   await adminFetch(`/api/admin/socials?id=${id}`, { method: "DELETE" }, getToken);
+}
+
+// Admin Skills
+export async function adminGetSkills(getToken: () => Promise<string | null>): Promise<Skill[]> {
+  const res = await adminFetch("/api/admin/skills", { method: "GET" }, getToken);
+  const json = await res.json() as { success: boolean; data: Skill[] };
+  return json.data;
+}
+
+export async function adminCreateSkill(
+  data: Partial<Skill>,
+  getToken: () => Promise<string | null>
+): Promise<Skill> {
+  const res = await adminFetch("/api/admin/skills", { method: "POST", body: JSON.stringify(data) }, getToken);
+  const json = await res.json() as { success: boolean; data: Skill };
+  return json.data;
+}
+
+export async function adminUpdateSkill(
+  id: number,
+  data: Partial<Skill>,
+  getToken: () => Promise<string | null>
+): Promise<Skill> {
+  const res = await adminFetch(`/api/admin/skills?id=${id}`, { method: "PUT", body: JSON.stringify(data) }, getToken);
+  const json = await res.json() as { success: boolean; data: Skill };
+  return json.data;
+}
+
+export async function adminDeleteSkill(
+  id: number,
+  getToken: () => Promise<string | null>
+): Promise<void> {
+  await adminFetch(`/api/admin/skills?id=${id}`, { method: "DELETE" }, getToken);
 }

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth, UserButton } from "@clerk/clerk-react";
-import { Home, User, FolderOpen, Briefcase, Share2, Menu, X, Globe } from "lucide-react";
+import { Home, User, FolderOpen, Briefcase, ListChecks, Share2, Menu, X, Globe } from "lucide-react";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: Home, exact: true },
   { to: "/admin/intro", label: "Intro", icon: User },
   { to: "/admin/projects", label: "Projects", icon: FolderOpen },
   { to: "/admin/career", label: "Career", icon: Briefcase },
+  { to: "/admin/skills", label: "Skills", icon: ListChecks },
   { to: "/admin/socials", label: "Socials", icon: Share2 },
 ];
 

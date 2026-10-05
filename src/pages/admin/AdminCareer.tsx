@@ -17,10 +17,10 @@ import {
 } from "@/lib/api";
 import type { CareerSection } from "@/lib/api";
 
-type SectionForm = { title: string; visible: boolean };
+type SectionForm = { title: string; visible: boolean; active: boolean };
 type EntryForm = { timestamp: string; title: string; description: string };
 
-const emptySectionForm: SectionForm = { title: "", visible: true };
+const emptySectionForm: SectionForm = { title: "", visible: true, active: false };
 const emptyEntryForm: EntryForm = { timestamp: "", title: "", description: "" };
 
 export default function AdminCareer() {
@@ -126,6 +126,10 @@ export default function AdminCareer() {
             <Switch checked={sectionForm.visible} onCheckedChange={(v) => setSectionForm((f) => ({ ...f, visible: v }))} />
             <label className="text-sm">Visible</label>
           </div>
+          <div className="flex items-center gap-2">
+            <Switch checked={sectionForm.active} onCheckedChange={(v) => setSectionForm((f) => ({ ...f, active: v }))} />
+            <label className="text-sm">On air (current position)</label>
+          </div>
           <div className="flex gap-2">
             <Button onClick={saveSection}>Save</Button>
             <Button variant="outline" onClick={() => { setShowNewSection(false); setSectionForm(emptySectionForm); }}>Cancel</Button>
@@ -146,6 +150,10 @@ export default function AdminCareer() {
                   <Switch checked={sectionForm.visible} onCheckedChange={(v) => setSectionForm((f) => ({ ...f, visible: v }))} />
                   <label className="text-sm">Visible</label>
                 </div>
+                <div className="flex items-center gap-2">
+                  <Switch checked={sectionForm.active} onCheckedChange={(v) => setSectionForm((f) => ({ ...f, active: v }))} />
+                  <label className="text-sm">On air (current position)</label>
+                </div>
                 <div className="flex gap-2">
                   <Button size="sm" onClick={saveSection}>Save</Button>
                   <Button size="sm" variant="outline" onClick={() => { setEditingSectionId(null); setSectionForm(emptySectionForm); }}>Cancel</Button>
@@ -154,9 +162,10 @@ export default function AdminCareer() {
             ) : (
               <div className="p-4 bg-muted/30 flex items-center gap-3">
                 <span className="font-semibold flex-1">{section.title}</span>
+                {section.active && <Badge variant="outline" className="text-xs">On air</Badge>}
                 {!section.visible && <Badge variant="outline" className="text-xs">Hidden</Badge>}
                 <Switch checked={!!section.visible} onCheckedChange={() => toggleSectionVisible(section)} />
-                <Button variant="ghost" size="icon" onClick={() => { setEditingSectionId(section.id); setSectionForm({ title: section.title ?? "", visible: !!section.visible }); setShowNewSection(false); }}>
+                <Button variant="ghost" size="icon" onClick={() => { setEditingSectionId(section.id); setSectionForm({ title: section.title ?? "", visible: !!section.visible, active: !!section.active }); setShowNewSection(false); }}>
                   <Pencil className="w-4 h-4" />
                 </Button>
                 <Button variant="ghost" size="icon" onClick={() => deleteSection(section.id)}>

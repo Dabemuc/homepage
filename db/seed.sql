@@ -6,12 +6,13 @@ INSERT OR REPLACE INTO site_config (key, value) VALUES ('projects_visible', 'tru
 INSERT OR REPLACE INTO site_config (key, value) VALUES ('career_visible', 'true');
 
 -- Intro
-INSERT OR REPLACE INTO intro (id, name, tagline, bio, avatar_url) VALUES (
+INSERT OR REPLACE INTO intro (id, name, tagline, bio, avatar_url, on_air_since) VALUES (
   1,
   'Dabemuc',
-  'Full-Stack Developer & Cloud Enthusiast',
+  'Daniel. Developer, student, operator of small machines. Broadcasting work logs from Germany.',
   'I build fast, reliable software with a focus on clean architecture and developer experience. Passionate about Rust, TypeScript, and edge computing.',
-  null
+  null,
+  '2019-01-01'
 );
 
 -- Projects
@@ -84,7 +85,7 @@ INSERT INTO projects (title, short_description, description, screenshot, repo_ur
 );
 
 -- Career sections and entries
-INSERT INTO career_sections (title, display_order, visible) VALUES ('Dual Studies at TechCorp & University', 1, 1);
+INSERT INTO career_sections (title, display_order, visible) VALUES ('Dual Studies at TechCorp & University', 2, 1);
 
 INSERT INTO career_entries (section_id, timestamp, title, description, display_order) VALUES (
   1,
@@ -118,7 +119,7 @@ INSERT INTO career_entries (section_id, timestamp, title, description, display_o
   4
 );
 
-INSERT INTO career_sections (title, display_order, visible) VALUES ('Software Engineer at StartupXYZ', 2, 1);
+INSERT INTO career_sections (title, display_order, visible, active) VALUES ('Software Engineer at StartupXYZ', 1, 1, 1);
 
 INSERT INTO career_entries (section_id, timestamp, title, description, display_order) VALUES (
   2,
@@ -148,3 +149,9 @@ INSERT INTO career_entries (section_id, timestamp, title, description, display_o
 INSERT INTO social_links (platform, label, url, icon, display_order, visible) VALUES ('github', 'GitHub', 'https://github.com/dabemuc', 'Github', 1, 1);
 INSERT INTO social_links (platform, label, url, icon, display_order, visible) VALUES ('linkedin', 'LinkedIn', 'https://linkedin.com/in/dabemuc', 'Linkedin', 2, 1);
 INSERT INTO social_links (platform, label, url, icon, display_order, visible) VALUES ('email', 'Email', 'mailto:hello@example.com', 'Mail', 3, 1);
+
+-- Skills (operator profile grid)
+INSERT INTO skills (label, value, display_order, visible) VALUES ('Systems', 'Rust', 1, 1);
+INSERT INTO skills (label, value, display_order, visible) VALUES ('Interfaces', 'TypeScript · NestJS', 2, 1);
+INSERT INTO skills (label, value, display_order, visible) VALUES ('Models', 'Python · MATLAB', 3, 1);
+INSERT INTO skills (label, value, display_order, visible) VALUES ('Research', 'HCI · XAI', 4, 1);
