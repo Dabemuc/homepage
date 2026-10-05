@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { adminGetIntro, adminUpdateIntro } from "@/lib/api";
+import { DEFAULT_BUILD_LOG } from "@/lib/station";
 
 export default function AdminIntro() {
   const { getToken } = useAuth();
@@ -17,6 +18,7 @@ export default function AdminIntro() {
     on_air_since: "",
     station_name: "",
     station_frequency: "",
+    build_log: "",
   });
 
   useEffect(() => {
@@ -30,6 +32,7 @@ export default function AdminIntro() {
             on_air_since: data.on_air_since ?? "",
             station_name: data.station_name ?? "",
             station_frequency: data.station_frequency ?? "",
+            build_log: data.build_log ?? "",
           });
         }
       })
@@ -103,6 +106,19 @@ export default function AdminIntro() {
           </div>
           <p className="text-xs text-muted-foreground mt-1">
             Top bar shows "{form.station_name || "Station D"} — {form.station_frequency || "147.300"} MHz"; the frequency also appears on the QSL card
+          </p>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Build log</label>
+          <Textarea
+            value={form.build_log}
+            onChange={(e) => setForm((f) => ({ ...f, build_log: e.target.value }))}
+            placeholder={DEFAULT_BUILD_LOG.join("\n")}
+            rows={4}
+            className="font-mono text-sm"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Typed line by line into the hero terminal while the mast builds; ends with "DEPLOYED — ON AIR". Keep lines short (~28 characters). Empty uses the placeholder.
           </p>
         </div>
         <div>

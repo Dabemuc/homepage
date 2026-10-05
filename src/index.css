@@ -31,6 +31,18 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.15; }
   }
+
+  --animate-tx-sway: tx-sway 3.2s ease-in-out infinite alternate;
+  @keyframes tx-sway {
+    from { transform: rotate(-2.5deg); }
+    to { transform: rotate(2.5deg); }
+  }
+
+  --animate-tx-ring: tx-ring 2.4s ease-out infinite;
+  @keyframes tx-ring {
+    from { transform: scale(0.2); opacity: 0.9; }
+    to { transform: scale(1); opacity: 0; }
+  }
 }
 
 :root {

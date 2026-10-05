@@ -17,6 +17,24 @@ export function stationOf(intro: Intro | null) {
   };
 }
 
+/** Terminal lines for the hero build animation when the admin hasn't set any. */
+export const DEFAULT_BUILD_LOG = [
+  "$ cargo build --release",
+  "Compiling antenna v0.3.1",
+  "Compiling transmitter v1.4.7",
+  "Finished release in 3.14s",
+];
+
+export function parseBuildLog(text: string | null | undefined): string[] {
+  const lines = (text ?? "").split("\n").map((l) => l.trimEnd()).filter(Boolean);
+  return lines.length > 0 ? lines : DEFAULT_BUILD_LOG;
+}
+
+/** Horizontal position (%) of each station on the tuner dial: evenly spaced, centered in equal slots. */
+export function stationPosition(index: number, count: number): number {
+  return ((index + 0.5) / count) * 100;
+}
+
 // Shared layout/typography classes
 export const WRAP = "mx-auto w-full max-w-[1360px] px-4 md:px-10";
 /** Roomier wrapper for the content sections (operator, broadcasts, log) */

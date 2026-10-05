@@ -8,6 +8,7 @@ export type Intro = {
   on_air_since: string | null;
   station_name: string | null;
   station_frequency: string | null;
+  build_log: string | null;
 };
 
 export type Project = {

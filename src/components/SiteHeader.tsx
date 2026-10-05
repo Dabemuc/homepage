@@ -14,6 +14,7 @@ type Props = {
 
 export default function SiteHeader({ links, intro, socials }: Props) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(false);
@@ -42,6 +43,14 @@ export default function SiteHeader({ links, intro, socials }: Props) {
     };
   }, [open]);
 
+  // Sticky on mobile: show a hairline under the bar once the page has scrolled
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   // The panel only exists below md; close it if the viewport grows past that
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
@@ -54,7 +63,12 @@ export default function SiteHeader({ links, intro, socials }: Props) {
   const stationLabel = intro === undefined ? "\u00a0" : `${station.name} — ${station.frequency} MHZ`;
 
   return (
-    <header className={`${WRAP} ${LABEL} py-6 flex items-center justify-between gap-5`}>
+    // Sticky below md (desktop has the tuner bar); overflow-x-clip on the page wrapper keeps sticky working
+    <header
+      className={`${WRAP} ${LABEL} sticky top-0 z-40 flex items-center justify-between gap-5 bg-tx-paper border-b transition-colors py-4 md:py-6 md:static md:border-b-0 ${
+        scrolled ? "border-tx-ink/15" : "border-transparent"
+      }`}
+    >
       <span className="uppercase">{stationLabel}</span>
 
       {/* Desktop nav */}

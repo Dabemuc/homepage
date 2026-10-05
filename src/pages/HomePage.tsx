@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Hero from "@/components/sections/Hero";
 import BroadcastsSection from "@/components/sections/BroadcastsSection";
 import LogSection from "@/components/sections/LogSection";
@@ -6,9 +6,10 @@ import OperatorSection from "@/components/sections/OperatorSection";
 import RespondFooter from "@/components/sections/RespondFooter";
 import SiteHeader from "@/components/SiteHeader";
 import SocialRail from "@/components/SocialRail";
+import TunerBar from "@/components/TunerBar";
 import { fetchHomepage } from "@/lib/api";
 import type { HomepageData } from "@/lib/api";
-import { WRAP, LABEL } from "@/lib/station";
+import { WRAP, LABEL, parseBuildLog, stationOf } from "@/lib/station";
 
 export default function HomePage() {
   const [data, setData] = useState<HomepageData | null>(null);
@@ -37,19 +38,30 @@ export default function HomePage() {
   const showLog = !!data && data.config.career_visible !== "false" && data.career.length > 0;
   const showOperator = !!data && introVisible;
 
-  const navLinks = [
-    { id: "operator", label: "OPERATOR", show: showOperator },
-    { id: "broadcasts", label: "BROADCASTS", show: showBroadcasts },
-    { id: "log", label: "LOG", show: showLog },
-    { id: "respond", label: "RESPOND", show: true },
-  ].filter((l) => l.show);
+  const navLinks = useMemo(
+    () =>
+      [
+        { id: "operator", label: "OPERATOR", show: showOperator },
+        { id: "broadcasts", label: "BROADCASTS", show: showBroadcasts },
+        { id: "log", label: "LOG", show: showLog },
+        { id: "respond", label: "RESPOND", show: true },
+      ].filter((l) => l.show),
+    [showOperator, showBroadcasts, showLog]
+  );
+  const station = stationOf(data?.intro ?? null);
+  // The build animation starts once the admin's log is known (or loading failed and defaults are used)
+  const buildLog = useMemo(
+    () => (data ? parseBuildLog(data.intro?.build_log) : error ? parseBuildLog(null) : null),
+    [data, error]
+  );
 
   return (
-    <div className="min-h-screen bg-tx-paper text-tx-ink font-station text-[13px] overflow-x-hidden">
+    <div className="min-h-screen bg-tx-paper text-tx-ink font-station text-[13px] overflow-x-clip">
       <SiteHeader links={navLinks} intro={data ? data.intro : loading ? undefined : null} socials={data?.socials ?? []} />
       <SocialRail socials={data?.socials ?? []} />
+      {data && <TunerBar links={navLinks} stationName={station.name} />}
 
-      <Hero intro={intro} />
+      <Hero intro={intro} station={station} links={data ? navLinks : []} buildLog={buildLog} />
 
       {loading && (
         <div className={`${WRAP} ${LABEL} pb-24 text-tx-muted`}>

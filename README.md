@@ -15,9 +15,10 @@ A personal portfolio homepage with a fully configurable admin UI, hosted on Clou
 ## Features
 
 - Public homepage in the "Last Transmission" design (radio-station theme, fixed light palette):
-  - **Top bar** — station label (`<Station name> — <Frequency> MHZ`, editable on the admin Intro page) + section nav; below `md` the nav collapses into a burger that slides in a sidebar (which also lists the socials)
+  - **Top bar** — station label (`<Station name> — <Frequency> MHZ`, editable on the admin Intro page) + section nav; sticky on mobile; below `md` the nav collapses into a burger that slides in a sidebar (which also lists the socials)
   - **Social rail** — from `md` up, a slim icon strip fixed in the left gutter, vertically centered (difference-blended so it reads on light and dark sections); it fades out once the Respond footer is in view
-  - **Hero** — station illustration, headline, tagline and a `LIVE — DAY n` counter (days since the intro's *On air since* date)
+  - **Hero** — on every visit a radio mast assembles itself like a build while a terminal types the admin-editable *Build log*; when it finishes the station goes live (warning light, signal rings, `LIVE — DAY n` counter from the *On air since* date). A crane keeps a `</>` segment swaying on its hook, and `↻ REBUILD` replays the animation (reduced-motion users get the finished state). The horizon line is a tuner dial whose stations link to the sections (station labels from `md` up; on mobile the burger menu navigates)
+  - **Tuner bar** — from `md` up, a sticky dial slides in once the hero dial scrolls away; its needle follows the section being read
   - **Operator profile** — a QSL card "issued" to each visitor, the bio, and a two-column skills grid
     - The card carries a visitor number (`QSL NO. 000042`): on a browser's first visit the page calls `POST /api/public/visit`, which increments `site_config.visitor_count` atomically (obvious bots are skipped by user agent); the number is then kept in `localStorage` so returning visitors keep theirs
   - **Broadcasts** — projects as `TX-00n` rows; clicking one opens a detail modal with screenshot, links and Markdown description
@@ -77,7 +78,7 @@ wrangler d1 migrations apply homepage --local
 wrangler d1 migrations apply homepage --remote
 ```
 
-> **Note:** `0001` adds the `skills` table, `career_sections.active` and `intro.on_air_since`; `0002` adds `intro.station_name` and `intro.station_frequency`. Apply them to the remote D1 before deploying the new homepage design.
+> **Note:** `0001` adds the `skills` table, `career_sections.active` and `intro.on_air_since`; `0002` adds `intro.station_name` and `intro.station_frequency`; `0003` adds `intro.build_log`. Apply them to the remote D1 before deploying the new homepage design.
 
 ## Seeding
 
@@ -147,13 +148,15 @@ npm run cf-typegen
 │   │   ├── Markdown.tsx      # Markdown renderer styled for the homepage
 │   │   ├── SocialIcon.tsx    # Supported social icons (explicit lucide subset) + text fallback
 │   │   ├── SocialRail.tsx    # Floating desktop social strip
+│   │   ├── TunerBar.tsx      # Sticky desktop tuner dial nav
 │   │   └── SiteHeader.tsx    # Homepage top bar + mobile slide-in nav
 │   ├── pages/
 │   │   ├── HomePage.tsx
 │   │   └── admin/            # Admin pages (Clerk-protected)
 │   ├── lib/
 │   │   ├── api.ts            # Typed API fetch wrappers
-│   │   └── station.ts        # Fixed homepage copy (station name, frequency, QTH…) + helpers
+│   │   ├── station.ts        # Fixed homepage copy (station name, frequency, QTH…) + helpers
+│   │   └── useBuildSequence.ts # Hero build animation timeline
 │   ├── App.tsx
 │   └── main.tsx
 ├── worker/
